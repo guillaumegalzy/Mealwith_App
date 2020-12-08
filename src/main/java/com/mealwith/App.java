@@ -16,7 +16,7 @@ public class App extends Application {
     public void start(Stage primarystage) {
         primarystage.setTitle("MealwithApp");
         primarystage.centerOnScreen();
-        primarystage.setResizable(true);
+        primarystage.setResizable(false);
 
         // Premier parent
         Parent home = null;

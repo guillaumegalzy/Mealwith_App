@@ -1,10 +1,12 @@
 package com.mealwith.Service;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -13,12 +15,12 @@ public class SceneHandler {
 
     /**
      * Gère le changement de scene via passage d'un actionEvent et de l'URL du FXML adéquat
-     * @param actionEvent
+     * @param event
      * @param urlFXML Définit en partant du package comprenant l'App principal
      */
-    public void setScene(ActionEvent actionEvent, String urlFXML){
+    public void setScene(Event event, String urlFXML){
         // Récupération de la stage via le node ayant déclenché l'actionEvent
-            Node node = (Node) actionEvent.getSource();
+            Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
 
         // Ferme la stage avec l'ancienne Scene
