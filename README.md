@@ -18,7 +18,7 @@ Librairies utilisées :
 
 | Nom                  | Version | Lien | Usage  |
 | -------------        |:---:    | :---:|:-----: |
-|                      |         |      |        |
+| Libsodium-jna        |  1.0.4  |  [lien](https://github.com/muquit/libsodium-jna)    |  Permet d'encoder/décoder selon le même algorithme que Symfony      |
 |                      |         |      |        |
 |                      |         |      |        |
 |                      |         |      |        |

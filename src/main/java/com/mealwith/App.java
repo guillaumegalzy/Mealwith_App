@@ -21,7 +21,7 @@ public class App extends Application {
         // Premier parent
         Parent home = null;
         try {
-            home = FXMLLoader.load(getClass().getResource("/com/mealwith/gui/Home/Home.fxml"));
+            home = FXMLLoader.load(getClass().getResource("/com/mealwith/gui/Login/Login.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
