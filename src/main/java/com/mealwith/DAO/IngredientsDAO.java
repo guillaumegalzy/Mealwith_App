@@ -1,9 +1,11 @@
 package com.mealwith.DAO;
 
-import com.mealwith.Entity.CategoriesIngredients;
 import com.mealwith.Entity.Ingredients;
 import javafx.collections.FXCollections;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -41,13 +43,17 @@ public class IngredientsDAO extends DAO{
     }
 
     public void Delete(Ingredients ingredients) throws SQLException {
-        // Création de la requête de recherche de l'ensemble des users
+        // Création de la requête de recherche de l'ensemble des ingredients
+            PreparedStatement delOne = con.prepareStatement("DELETE from ingredients WHERE id =?");
 
         // Définit le critère de recherche pour la requête préparée
+            delOne.setInt(1, ingredients.getId());
 
         // Exécute la requête
+            delOne.execute();
 
         // Ferme la requête
+            delOne.close();
     }
 
     public void Find() throws SQLException {
@@ -55,30 +61,40 @@ public class IngredientsDAO extends DAO{
     }
 
     /**
-     * Récupère l'ensemble des users de la BDD, trié par id croissant
+     * Récupère l'ensemble des ingredients de la BDD, trié par id croissant
      * @return une list de user
-     * @throws SQLException
+     * @throws SQLException erreur lors de la requête SQL
      */
     public List<Ingredients> List() throws SQLException {
-        // Création de la requête de recherche de l'ensemble des users
+        // Création de la requête de recherche de l'ensemble des ingrédients
             Statement listAll = con.createStatement();
 
         // Exécute la requête et récupération du résultat
-            ResultSet result = listAll.executeQuery("SELECT * from ingredients");
+            ResultSet result = listAll.executeQuery("SELECT * from ingredients ORDER BY id");
 
         while(result.next()){
-            repoIngredients.add(new Ingredients(
-                            result.getInt(2),
-                            result.getInt(3),
-                            result.getInt(4),
-                            result.getString(5),
-                            result.getDouble(6),
-                            result.getInt(7),
-                            result.getInt(8),
-                            result.getInt(9),
-                            result.getString(10)
-                    )
-            );
+            // Crée une image à partir de l'url inscrit dans la bdd sous le champ 'picture'
+                Image image = new Image(result.getString(10));
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(100);
+                imageView.setFitHeight(100);
+                imageView.setPreserveRatio(true);
+
+            // Ajoute l'ingrédient dans le repo
+                repoIngredients.add(new Ingredients(
+                                result.getInt(1),
+                                result.getInt(2),
+                                result.getInt(3),
+                                result.getInt(4),
+                                result.getString(5),
+                                result.getDouble(6),
+                                result.getInt(7),
+                                result.getInt(8),
+                                result.getInt(9),
+                                result.getString(10),
+                                imageView
+                        )
+                );
         }
 
         // Ferme la requête

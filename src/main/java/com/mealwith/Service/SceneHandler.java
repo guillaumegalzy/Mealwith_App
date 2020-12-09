@@ -15,10 +15,11 @@ public class SceneHandler {
 
     /**
      * Gère le changement de scene via passage d'un actionEvent et de l'URL du FXML adéquat
-     * @param event
-     * @param urlFXML Définit en partant du package comprenant l'App principal
+     * @param event evènement appelant la fonction
+     * @param urlFXML nom du FXML à charger
+     * @param directory nom du directory, en partant du package 'gui'
      */
-    public void setScene(Event event, String urlFXML){
+    public void setScene(Event event, String directory,String urlFXML){
         // Récupération de la stage via le node ayant déclenché l'actionEvent
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
@@ -27,14 +28,13 @@ public class SceneHandler {
             stage.close();
 
         try {
+            // Chargement du FXML demandé en argument et création de la scene associée
+                Parent homeRoot = FXMLLoader.load(getClass().getResource("/com/mealwith/gui/"+ directory + "/" + urlFXML + ".fxml"));
+                Scene scene = new Scene(homeRoot);
+                stage.setScene(scene);
 
-        // Chargement du FXML demandé en argument et création de la scene associée
-            Parent homeRoot = FXMLLoader.load(getClass().getResource("/com/mealwith/gui/"+ urlFXML + "/" + urlFXML + ".fxml"));
-            Scene scene = new Scene(homeRoot);
-            stage.setScene(scene);
-
-        // Ouvre la stage avec la nouvelle Scene
-            stage.show();
+            // Ouvre la stage avec la nouvelle Scene
+                stage.show();
 
         } catch (IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());

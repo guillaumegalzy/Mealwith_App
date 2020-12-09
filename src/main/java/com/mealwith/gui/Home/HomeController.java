@@ -51,7 +51,7 @@ public class HomeController implements Initializable {
                 // Redirection si clic sur le menu
                 hbox.setOnMouseClicked(event -> {
                     SceneHandler sceneHandler = new SceneHandler();
-                    sceneHandler.setScene(event,hbox.getId());
+                    sceneHandler.setScene(event,hbox.getId(),hbox.getId());
                 });
 
                 // Hover effect si survol du menu

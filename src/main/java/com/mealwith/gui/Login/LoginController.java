@@ -75,7 +75,7 @@ public class LoginController implements Initializable {
                                 this.errorMailIndic.setVisible(false);
 
                                 SceneHandler sceneHandler = new SceneHandler();
-                                sceneHandler.setScene(actionEvent,"Home");
+                                sceneHandler.setScene(actionEvent,"Home","Home");
                             }
                     }
                 } catch (SQLException throwables) {

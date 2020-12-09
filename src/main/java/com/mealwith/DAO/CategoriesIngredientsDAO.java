@@ -3,6 +3,7 @@ package com.mealwith.DAO;
 import com.mealwith.Entity.CategoriesIngredients;
 import javafx.collections.FXCollections;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,8 +50,22 @@ public class CategoriesIngredientsDAO extends DAO{
         // Ferme la requête
     }
 
-    public void Find() throws SQLException {
+    public String GetNameByID(int id) throws SQLException {
+        // Création de la requête de recherche de l'ensemble des users
+            PreparedStatement getNameByID = con.prepareStatement("SELECT name from ingredient_category WHERE id=?");
 
+        // Définit le critère de recherche pour la requête préparée
+            getNameByID.setInt(1,id);
+
+        // Exécute la requête
+            ResultSet result = getNameByID.executeQuery();
+
+            result.first();
+
+        // Ferme la requête
+            getNameByID.close();
+
+        return result.getString(1);
     }
 
     /**
