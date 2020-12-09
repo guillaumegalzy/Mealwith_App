@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mealwith.gui.Ingredients.Formulaire.FormulaireController">
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mealwith.gui.Ingredients.Formulaire.FormulaireController">
    <children>
       <VBox layoutY="24.0" spacing="80.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -63,7 +75,7 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <GridPane alignment="CENTER_LEFT" prefHeight="347.0" prefWidth="592.0">
+                  <GridPane alignment="CENTER_LEFT" prefHeight="465.0" prefWidth="558.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                      </columnConstraints>
@@ -83,7 +95,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="comboCategory" prefHeight="25.0" prefWidth="287.0" />
+                              <ComboBox fx:id="comboCategory" disable="true" prefHeight="25.0" prefWidth="287.0" promptText="Choose a category" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="249.0" prefWidth="411.0" spacing="10.0" GridPane.rowIndex="2">
@@ -93,7 +105,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="comboOrigin" prefHeight="25.0" prefWidth="287.0" />
+                              <ComboBox fx:id="comboOrigin" disable="true" prefHeight="25.0" prefWidth="287.0" promptText="Choose an origin" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="249.0" prefWidth="411.0" spacing="10.0" GridPane.rowIndex="3">
@@ -103,7 +115,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="comboUnit" prefHeight="25.0" prefWidth="287.0" />
+                              <ComboBox fx:id="comboUnit" disable="true" prefHeight="25.0" prefWidth="287.0" promptText="Choose a unit" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="249.0" prefWidth="411.0" spacing="10.0" GridPane.rowIndex="4">
@@ -120,24 +132,35 @@
                            <children>
                               <VBox spacing="20.0">
                                  <children>
-                                    <Slider blockIncrement="1.0" majorTickUnit="10.0" max="40.0" minorTickCount="1" prefHeight="14.0" prefWidth="345.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                                     <Group>
                                        <children>
-                                          <Label layoutY="2.0" text="Temp min">
+                                          <Slider fx:id="sliderTempMin" disable="true" layoutX="3.0" layoutY="1.0" majorTickUnit="10.0" max="40.0" minorTickCount="1" prefHeight="37.0" prefWidth="386.0" showTickLabels="true" showTickMarks="true">
+                                             <cursor>
+                                                <Cursor fx:constant="CLOSED_HAND" />
+                                             </cursor></Slider>
+                                          <Label layoutX="3.0" layoutY="61.0" text="Temp min">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="inputTempMin" editable="false" layoutX="90.0" prefHeight="25.0" prefWidth="105.0" />
-                                          <Label layoutX="205.0" layoutY="2.0" text="Temp max">
+                                          <TextField fx:id="inputTempMin" editable="false" layoutX="93.0" layoutY="59.0" prefHeight="25.0" prefWidth="105.0" />
+                                       </children>
+                                    </Group>
+                                    <Group>
+                                       <children>
+                                          <Slider fx:id="sliderTempMax" blockIncrement="1.0" disable="true" layoutX="3.0" layoutY="1.0" majorTickUnit="10.0" max="40.0" minorTickCount="1" prefHeight="37.0" prefWidth="387.0" showTickLabels="true" showTickMarks="true" />
+                                          <Label layoutY="62.0" text="Temp max">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="inputTempMax" editable="false" layoutX="280.0" prefHeight="25.0" prefWidth="107.0" />
+                                          <TextField fx:id="inputTempMax" editable="false" layoutX="90.0" layoutY="58.0" prefHeight="25.0" prefWidth="107.0" />
                                        </children>
                                     </Group>
                                  </children>
+                                 <HBox.margin>
+                                    <Insets top="20.0" />
+                                 </HBox.margin>
                               </VBox>
                            </children>
                         </HBox>

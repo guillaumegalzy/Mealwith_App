@@ -99,7 +99,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <Button fx:id="btnLogIn" mnemonicParsing="false" onAction="#btnLogIn_Click" prefHeight="51.0" prefWidth="99.0" text="Log In">
+                        <Button fx:id="btnLogIn" defaultButton="true" mnemonicParsing="false" onAction="#btnLogIn_Click" prefHeight="51.0" prefWidth="99.0" text="Log In">
                            <font>
                               <Font size="18.0" />
                            </font>

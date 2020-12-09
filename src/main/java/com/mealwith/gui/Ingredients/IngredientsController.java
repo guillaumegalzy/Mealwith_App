@@ -15,7 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import org.controlsfx.control.textfield.CustomTextField;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -37,7 +37,7 @@ public class IngredientsController implements Initializable {
     @FXML
     public TableView<Ingredients> tab_ingredient;
     @FXML
-    public CustomTextField test;
+    public TextFields test;
     @FXML
     public Button btnDelete,btnDetails,btnModify,btnAdd;
 
@@ -72,9 +72,6 @@ public class IngredientsController implements Initializable {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-
-        // Test autcomplete field
-//            TextFields.bindAutoCompletion(test, Collections.addAll(listIngredients));
     }
 
     public void btnClick(ActionEvent actionEvent) throws SQLException {

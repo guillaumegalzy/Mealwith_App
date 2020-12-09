@@ -16,12 +16,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +40,11 @@ public class FormulaireController implements Initializable {
     @FXML
     public Button btnAccept,btnCancel;
     @FXML
-    public ComboBox<String> comboUnit;
+    public ComboBox<String> comboUnit,comboOrigin,comboCategory;
     @FXML
-    public ComboBox<String> comboOrigin;
+    public TextField inputPrice,inputTempMin,inputTempMax,inputName,inputID;
     @FXML
-    public ComboBox<String> comboCategory;
-    @FXML
-    public TextField inputPrice;
-
+    public Slider sliderTempMin,sliderTempMax;
 
     public List<Object> dataReceive = new ArrayList<>(); // Stockage des données récupérées du controlleur de provenance
     public OriginDAO repoOrigin = new OriginDAO();
@@ -52,15 +54,26 @@ public class FormulaireController implements Initializable {
     public CategoriesIngredientsDAO repoCatIngr = new CategoriesIngredientsDAO();
     public ObservableList<String> listCatIngr = FXCollections.observableArrayList();
     public SceneHandler sceneHandler = new SceneHandler();
-    public TextField inputTempMin,inputTempMax,inputName,inputID;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Vide les précédentes données récupérées
             dataReceive.clear();
 
-        // Gestionnaire d'écoute sur le logo pour renvoyer au menu
+        // Ajout gestionnaire d'écoute sur le logo pour renvoyer au menu
             Home.setOnMouseClicked(event -> sceneHandler.setScene(event,Home.getId(),Home.getId()));
+
+        // Ajout gestionnaires d'écoute sur les sliders pour la température et les inputs réciproquement
+            sliderTempMin.valueProperty().addListener((observable, oldValue, newValue) -> inputTempMin.setText(String.valueOf(newValue.intValue())));
+            sliderTempMax.valueProperty().addListener((observable, oldValue, newValue) -> inputTempMax.setText(String.valueOf(newValue.intValue())));
+
+            inputTempMin.setOnAction(event -> sliderTempMin.setValue(Double.parseDouble(inputTempMin.getText())));
+            inputTempMax.setOnAction(event -> sliderTempMax.setValue(Double.parseDouble(inputTempMax.getText())));
+
+
+        // Ajout gestionnaires d'écoute sur les sliders pour la température et les inputs réciproquement
+            comboUnit.setOnInputMethodTextChanged(event -> comboUnit.cancelEdit());
 
         // Récupération des images
             Image Img = new Image("img/Logo Mealwith.png");
@@ -89,9 +102,14 @@ public class FormulaireController implements Initializable {
                 throwables.printStackTrace();
             }
 
-        // Récupération des données stockées par le controlleur de provenance
+
         try {
-            getData();
+            // Récupération des données stockées par le controlleur de provenance
+                getData();
+            // Chargement des valeurs dans les champs si nécessaire
+                loadPage(dataReceive.get(0).toString());
+            // Débloque les saisies, si nécessaire
+                unlockField(dataReceive.get(0).toString());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -100,9 +118,66 @@ public class FormulaireController implements Initializable {
         this.comboArtist.valueProperty().addListener((observable, oldValue, newValue) ->
                 inputArtist.setVisible(newValue.equals("Ajouter un nouvel artiste")));*/
 
-        /*// Ajout gestionnaire d'écoute sur l'image, pour permettre sa modification
-        if(dataReceive.get(0).equals("Modification")) {
-            ImgDisc.setOnMouseClicked(event -> {
+
+    }
+
+    /**
+     * Récupère les datas stockées par le controlleur principal et remplis les champs s'il s'agit d'une modification ou d'un détail
+     */
+    public void getData()  {
+        // Récupération de la stage principale à partir du tableau
+            dataReceive.addAll(IngredientsController.dataSend);
+    }
+
+    /**
+     * Fonction récupérant toute les informations nécessaire en cas de modification ou de visualisation d'un ingredient
+     * @param operation Opération demandée "Modify","Add" ou "Details". Donnée émise par le controlleur de provenance
+     * @throws SQLException Exception possible liée à l'usage de la BDD
+     */
+    public void loadPage(String operation) throws SQLException{
+
+        // S'il s'agit d'une modification ou d'un détails
+        if(operation.equals("Modify") || operation.equals("Details")){
+
+            // Remplissage des champs avec les informations du disque
+            Ingredients ingredients = (Ingredients) this.dataReceive.get(1);
+            this.inputID.setText(String.valueOf(ingredients.getId()));
+            this.inputName.setText(ingredients.getName());
+            this.inputPrice.setText(String.valueOf(ingredients.getPrice()));
+            this.inputTempMin.setText(String.valueOf(ingredients.getTemp_min()));
+            this.sliderTempMin.setValue(ingredients.getTemp_min());
+            this.inputTempMax.setText(String.valueOf(ingredients.getTemp_max()));
+            this.sliderTempMax.setValue(ingredients.getTemp_max());
+            this.ImgIngredient.setImage(new Image(ingredients.getPicture()));
+            this.comboCategory.getSelectionModel().select(ingredients.getCategory_name());
+            this.comboUnit.getSelectionModel().select(ingredients.getUnit_name());
+            this.comboOrigin.getSelectionModel().select(ingredients.getOrigin_name());
+        }
+    }
+
+    /**
+     * Rend éditable l'ensemble des champs et ajout du gestionnaire d'écoute sur l'image pour pouvoir la changer
+      * @param operation Opération demandée "Modify","Add" ou "Details". Donnée émise par le controlleur de provenance
+     */
+    public void unlockField(String operation){
+        // S'il s'agit d'une modification exclusivement
+        if(operation.equals("Modify")) {
+
+            // rend editable les champs et les sliders
+                this.inputID.setEditable(true);
+                this.inputName.setEditable(true);
+                this.inputPrice.setEditable(true);
+                this.inputTempMin.setEditable(true);
+                this.inputTempMax.setEditable(true);
+                this.sliderTempMin.setDisable(false);
+                this.sliderTempMax.setDisable(false);
+                this.comboCategory.setDisable(false);
+                this.comboUnit.setDisable(false);
+                this.comboOrigin.setDisable(false);
+
+            // Ajout gestionnaire d'écoute sur l'image, pour permettre sa modification
+                ImgIngredient.setOnMouseClicked(event -> {
+
                 // Création et paramétrage d'un filechooser
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Sélectionner une image");
@@ -116,47 +191,25 @@ public class FormulaireController implements Initializable {
                 fileChooser.setInitialDirectory(new File(String.valueOf(path)));
 
                 // Ouverture de la fenêtre de dialogue et récupération de l'image choisie
-                File selectedFile = fileChooser.showOpenDialog(ImgDisc.getScene().getWindow());
+                File selectedFile = fileChooser.showOpenDialog(ImgIngredient.getScene().getWindow());
 
-                // Modification de l'image prévisualisée
-                Image newImage = new Image("/img/" + selectedFile.getName());
-                ImgDisc.setImage(newImage);
+                // Modification de l'image prévisualisée si elle a été choisie
+                if (selectedFile != null) {
+                    Image newImage = new Image("/img/" + selectedFile.getName());
+                    ImgIngredient.setImage(newImage);
+                }
             });
-        }*/
+        }
     }
-
-    /**
-     * Récupère les datas stockées par le controlleur principal et remplis les champs s'il s'agit d'une modification ou d'un détail
-     */
-    public void getData() throws SQLException {
-        // Récupération de la stage principale à partir du tableau
-            dataReceive.addAll(IngredientsController.dataSend);
-
-        // S'il s'agit d'une modification
-            if(this.dataReceive.get(0).equals("Modify") || this.dataReceive.get(0).equals("Details")){
-                // Remplissage des champs avec les informations du disque
-                    Ingredients ingredients = (Ingredients) this.dataReceive.get(1);
-                    this.inputID.setText(String.valueOf(ingredients.getId()));
-                    this.inputName.setText(ingredients.getName());
-                    this.inputPrice.setText(String.valueOf(ingredients.getPrice()));
-                    this.inputTempMin.setText(String.valueOf(ingredients.getTemp_min()));
-                    this.inputTempMax.setText(String.valueOf(ingredients.getTemp_max()));
-                    this.ImgIngredient.setImage(new Image(ingredients.getPicture()));
-                    this.comboCategory.getSelectionModel().select(ingredients.getCategory_name());
-                    this.comboUnit.getSelectionModel().select(ingredients.getUnit_name());
-                    this.comboOrigin.getSelectionModel().select(ingredients.getOrigin_name());
-            }
-    }
-
     public void btnClick(ActionEvent actionEvent) {
         // Récupère l'ID du bouton dans une string
             String btnText = ((Button)actionEvent.getSource()).getId();
 
         //Action différente selon le boutton
-        if (btnText.equals("btnAccept")){
-            // Ajout d'un ingredient à la base de données
+            /*if (btnText.equals("btnAccept")){
+                // Ajout d'un ingredient à la base de données
 
-        }
+            }*/
 
         // Redirection vers le formulaire 'Ingredients'
             sceneHandler.setScene(actionEvent,"Ingredients","Ingredients");
