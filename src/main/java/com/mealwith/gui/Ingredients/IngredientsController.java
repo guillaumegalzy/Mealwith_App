@@ -37,8 +37,6 @@ public class IngredientsController implements Initializable {
     @FXML
     public TableView<Ingredients> tab_ingredient;
     @FXML
-    public TextFields test;
-    @FXML
     public Button btnDelete,btnDetails,btnModify,btnAdd;
 
     public ObservableList<Ingredients> listIngredients = FXCollections.observableArrayList();
@@ -62,7 +60,7 @@ public class IngredientsController implements Initializable {
             try {
                     listIngredients.addAll(repoIngredients.List());
 
-                // Lie le membre name de chaque ingrédients à la colonne du tableau
+                // Lie le membre approprié de chaque ingrédients à la colonne du tableau
                     column_ID.setCellValueFactory(new PropertyValueFactory<>("id"));
                     column_ingredient.setCellValueFactory(new PropertyValueFactory<>("name"));
                     column_picture.setCellValueFactory(new PropertyValueFactory<>("picture_Img"));
