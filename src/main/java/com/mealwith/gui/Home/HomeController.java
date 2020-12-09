@@ -50,7 +50,6 @@ public class HomeController implements Initializable {
 
                 // Redirection si clic sur le menu
                 hbox.setOnMouseClicked(event -> {
-                    System.out.println(hbox.getId());
                     SceneHandler sceneHandler = new SceneHandler();
                     sceneHandler.setScene(event,hbox.getId());
                 });

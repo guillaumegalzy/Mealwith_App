@@ -17,7 +17,9 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     implementation 'org.mariadb.jdbc:mariadb-java-client:2.1.2' //JDBC MariaDB
+    implementation 'org.controlsfx:controlsfx:9.0.0' // ControlFX, JavaFX enhancement
 }
+
 
 test {
     useJUnitPlatform()

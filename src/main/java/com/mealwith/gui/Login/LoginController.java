@@ -26,7 +26,7 @@ public class LoginController implements Initializable {
     @FXML
     public Text errorMailIndic,errorMailMessage,errorPasswordIndic,errorPasswordMessage;
     @FXML
-    public ImageView ImgLogIn;
+    public ImageView ImgLogo;
     @FXML
     public Button btnLogIn;
 
@@ -37,7 +37,7 @@ public class LoginController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         // Image du logIn
             Image logInImg = new Image("img/LogIn.png");
-            ImgLogIn.setImage(logInImg);
+            ImgLogo.setImage(logInImg);
     }
 
     public void btnLogIn_Click(ActionEvent actionEvent)  {
@@ -53,7 +53,7 @@ public class LoginController implements Initializable {
             } else {
 
                 // Vérification de l'existence de l'utilisateurs en BDD
-                Users user = null;
+
                 try {
                     Object testUserExist = repoUsers.FindByMail(this.inputEmail.getText());
                     if (testUserExist == null){
@@ -62,7 +62,7 @@ public class LoginController implements Initializable {
                         this.errorMailMessage.setVisible(true);
                         this.errorMailMessage.setText("No user with this email");
                     }else {
-                        user = (Users) testUserExist;
+                        Users user = (Users) testUserExist;
                         this.inputEmail.setStyle("");
                         this.errorMailIndic.setVisible(false);
                         this.errorMailMessage.setVisible(false);
@@ -76,9 +76,6 @@ public class LoginController implements Initializable {
 
                                 SceneHandler sceneHandler = new SceneHandler();
                                 sceneHandler.setScene(actionEvent,"Home");
-                            }else{
-                                // Redirection vers le menu principal
-                                SceneHandler sceneHandler = new SceneHandler();
                             }
                     }
                 } catch (SQLException throwables) {

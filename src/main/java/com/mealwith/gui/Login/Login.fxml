@@ -44,7 +44,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="inputEmail" prefHeight="25.0" prefWidth="284.0" promptText="Type your email">
+                                    <TextField fx:id="inputEmail" prefHeight="25.0" prefWidth="284.0" promptText="Type your email" text="test@test.fr">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
@@ -122,7 +122,7 @@
       </AnchorPane>
       <AnchorPane layoutX="509.0" prefHeight="600.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <ImageView fx:id="ImgLogIn" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="ImgLogo" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../resources/img/LogIn.png" />
                </image>

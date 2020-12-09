@@ -1,14 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.controlsfx.control.textfield.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.mealwith.gui.Ingredients.IngredientsController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mealwith.gui.Ingredients.IngredientsController">
+   <children>
+      <VBox layoutY="24.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox fx:id="Home" alignment="CENTER_LEFT" spacing="30.0">
+               <children>
+                  <ImageView fx:id="ImgLogo" fitHeight="66.0" fitWidth="98.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../resources/img/Logo%20Mealwith.png" />
+                     </image>
+                  </ImageView>
+                  <Text fill="#f27507" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Mealwith">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="30.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" spacing="30.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label style="-fx-font-weight: bold;" text="Search">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <CustomTextField fx:id="test" prefHeight="25.0" prefWidth="603.0" />
+               </children>
+               <VBox.margin>
+                  <Insets right="20.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="589.0" prefWidth="980.0" spacing="100.0">
+               <children>
+                  <Pane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <Text layoutX="69.0" layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Categories" textAlignment="CENTER" wrappingWidth="197.66015625">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="All">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Meat / Fish">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Fruits / Vegetables">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dairy product">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Grocery">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </VBox>
+                     </children>
+                  </Pane>
+                  <TableView fx:id="tab_ingredient" prefHeight="589.0" prefWidth="600.0">
+                     <columns>
+                        <TableColumn fx:id="column_ingredient" prefWidth="482.0" resizable="false" text="Ingredients" />
+                        <TableColumn fx:id="column_details" minWidth="0.0" prefWidth="60.0" />
+                        <TableColumn fx:id="column_delete" minWidth="0.0" prefWidth="60.0" />
+                     </columns>
+                  </TableView>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="30.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
 </AnchorPane>
