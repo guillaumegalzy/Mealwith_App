@@ -47,10 +47,13 @@
                <children>
                   <VBox spacing="20.0">
                      <children>
-                        <ImageView fx:id="ImgIngredient" fitHeight="302.0" fitWidth="372.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="ImgIngredient" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../../../../resources/img/Ingredients.png" />
                            </image>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
                         </ImageView>
                         <HBox alignment="CENTER" spacing="20.0">
                            <children>

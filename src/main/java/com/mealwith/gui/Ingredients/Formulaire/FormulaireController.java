@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
@@ -78,7 +79,6 @@ public class FormulaireController implements Initializable {
 
             inputTempMin.setOnAction(event -> sliderTempMin.setValue(Double.parseDouble(inputTempMin.getText())));
             inputTempMax.setOnAction(event -> sliderTempMax.setValue(Double.parseDouble(inputTempMax.getText())));
-
 
         // Ajout gestionnaires d'écoute sur les sliders pour la température et les inputs réciproquement
             comboUnit.setOnInputMethodTextChanged(event -> comboUnit.cancelEdit());
@@ -178,29 +178,29 @@ public class FormulaireController implements Initializable {
                 this.comboOrigin.setDisable(false);
 
             // Ajout gestionnaire d'écoute sur l'image, pour permettre sa modification
+                ImgIngredient.setCursor(Cursor.cursor("HAND"));
                 ImgIngredient.setOnMouseClicked(event -> {
+                    // Création et paramétrage d'un filechooser
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Sélectionner une image");
+                    fileChooser.getExtensionFilters().addAll( //Extensions autorisées
+                            new FileChooser.ExtensionFilter("Image (.jpg, .jpeg, .png)", "*.jpeg", "*.jpg", "*.png")
+                    );
 
-                // Création et paramétrage d'un filechooser
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Sélectionner une image");
-                fileChooser.getExtensionFilters().addAll( //Extensions autorisées
-                        new FileChooser.ExtensionFilter("Image (.jpg, .jpeg, .png)", "*.jpeg", "*.jpg", "*.png")
-                );
+                    //Chemin d'accès au fichier de resources du projet pour paramétrage du chemin d'accès par défaut
+                    String directory = System.getProperty("user.dir");
+                    Path path = Paths.get(directory + "/src/main/resources/img");
+                    fileChooser.setInitialDirectory(new File(String.valueOf(path)));
 
-                //Chemin d'accès au fichier de resources du projet pour paramétrage du chemin d'accès par défaut
-                String directory = System.getProperty("user.dir");
-                Path path = Paths.get(directory + "/src/main/resources/img");
-                fileChooser.setInitialDirectory(new File(String.valueOf(path)));
+                    // Ouverture de la fenêtre de dialogue et récupération de l'image choisie
+                    File selectedFile = fileChooser.showOpenDialog(ImgIngredient.getScene().getWindow());
 
-                // Ouverture de la fenêtre de dialogue et récupération de l'image choisie
-                File selectedFile = fileChooser.showOpenDialog(ImgIngredient.getScene().getWindow());
-
-                // Modification de l'image prévisualisée si elle a été choisie
-                if (selectedFile != null) {
-                    Image newImage = new Image("/img/" + selectedFile.getName());
-                    ImgIngredient.setImage(newImage);
-                }
-            });
+                    // Modification de l'image prévisualisée si elle a été choisie
+                    if (selectedFile != null) {
+                        Image newImage = new Image("/img/" + selectedFile.getName());
+                        ImgIngredient.setImage(newImage);
+                    }
+                });
         }
     }
     public void btnClick(ActionEvent actionEvent) {
