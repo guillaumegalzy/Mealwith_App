@@ -2,6 +2,7 @@ package com.mealwith.gui.Login;
 
 import com.mealwith.DAO.UsersDAO;
 import com.mealwith.Entity.Users;
+import com.mealwith.Service.CustomsFonts;
 import com.mealwith.Service.PasswordVerify;
 import com.mealwith.Service.SceneHandler;
 import javafx.event.ActionEvent;
@@ -29,15 +30,20 @@ public class LoginController implements Initializable {
     public ImageView ImgLogo;
     @FXML
     public Button btnLogIn;
+    @FXML
+    public Text textLogo;
 
     public UsersDAO repoUsers;
-
+    private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Image du logIn
             Image logInImg = new Image("img/LogIn.png");
             ImgLogo.setImage(logInImg);
+
+        // Changement de la font du Logo
+            textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("100")));
     }
 
     public void btnLogIn_Click(ActionEvent actionEvent)  {
@@ -53,7 +59,6 @@ public class LoginController implements Initializable {
             } else {
 
                 // Vérification de l'existence de l'utilisateurs en BDD
-
                 try {
                     Object testUserExist = repoUsers.FindByMail(this.inputEmail.getText());
                     if (testUserExist == null){

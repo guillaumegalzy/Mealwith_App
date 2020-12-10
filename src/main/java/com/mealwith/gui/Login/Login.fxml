@@ -16,20 +16,22 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mealwith.gui.Login.LoginController">
    <children>
-      <AnchorPane layoutX="400.0" prefHeight="633.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="308.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="400.0" prefHeight="633.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
          <children>
             <VBox prefHeight="633.0" prefWidth="500.0" spacing="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="202.0" prefWidth="460.0">
+                  <HBox alignment="CENTER" prefHeight="202.0" prefWidth="460.0" VBox.vgrow="NEVER">
                      <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mealwith">
+                        <Text fx:id="textLogo" fill="#f27507" strokeType="OUTSIDE" strokeWidth="0.0" text="Mealwith">
                            <font>
                               <Font size="48.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
                         </Text>
                      </children>
                   </HBox>
@@ -112,8 +114,6 @@
                   <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="460.0" spacing="20.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="(C) Mealwith 2020" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                      </children>
                   </HBox>
                </children>
@@ -122,7 +122,7 @@
       </AnchorPane>
       <AnchorPane layoutX="509.0" prefHeight="600.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <ImageView fx:id="ImgLogo" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="ImgLogo" fitHeight="633.0" fitWidth="308.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <image>
                   <Image url="@../../../../../resources/img/LogIn.png" />
                </image>

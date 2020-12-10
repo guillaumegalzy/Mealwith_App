@@ -20,7 +20,7 @@
                   <Image url="@../../../../../resources/img/Logo%20Mealwith.png" />
                </image>
             </ImageView>
-            <Text fill="#f27507" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Mealwith">
+            <Text fx:id="textLogo" fill="#f27507" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Mealwith">
                <font>
                   <Font size="36.0" />
                </font>

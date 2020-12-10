@@ -1,9 +1,9 @@
 package com.mealwith.gui.Ingredients;
 
-import com.mealwith.DAO.CategoriesIngredientsDAO;
 import com.mealwith.DAO.IngredientsDAO;
 import com.mealwith.Entity.Ingredients;
 import com.mealwith.Service.AlertMessage;
+import com.mealwith.Service.CustomsFonts;
 import com.mealwith.Service.SceneHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
@@ -47,6 +48,9 @@ public class IngredientsController implements Initializable {
     @FXML
     public FontIcon iconDelete, iconAdd, iconModify, iconDetails, iconTri, catAllIcon, catMeatIcon, catFruitsIcon, catDairyIcon, catGroIcon;
 
+    private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
+    public Text textLogo; // Logotype
+
     public ObservableList<Ingredients> listIngredients = FXCollections.observableArrayList();
     public SceneHandler sceneHandler = new SceneHandler();
     public static List<Object> dataSend = new ArrayList<>(); // Données qui seront stockées par ce controlleur et utilisé par le controlleur de destination
@@ -56,6 +60,9 @@ public class IngredientsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Changement de la font du Logo
+            textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
+
         // Vide les données envoyées
             dataSend.clear();
 
@@ -156,7 +163,7 @@ public class IngredientsController implements Initializable {
      *
      * @param event Evenement déclenchant l'action
      */
-    public void MenuClick(Event event) throws SQLException {
+    public void MenuClick(Event event) {
         Label choiceLabel = (Label) event.getSource();
         String categoryName = choiceLabel.getText();
         String labelID = choiceLabel.getId();

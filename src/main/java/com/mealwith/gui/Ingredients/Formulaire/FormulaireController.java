@@ -7,6 +7,7 @@ import com.mealwith.Entity.CategoriesIngredients;
 import com.mealwith.Entity.Ingredients;
 import com.mealwith.Entity.Origin;
 import com.mealwith.Entity.Unit;
+import com.mealwith.Service.CustomsFonts;
 import com.mealwith.Service.SceneHandler;
 import com.mealwith.gui.Ingredients.IngredientsController;
 import javafx.collections.FXCollections;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -46,6 +48,9 @@ public class FormulaireController implements Initializable {
     @FXML
     public Slider sliderTempMin,sliderTempMax;
 
+    private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
+    public Text textLogo; // Logotype
+
     public List<Object> dataReceive = new ArrayList<>(); // Stockage des données récupérées du controlleur de provenance
     public OriginDAO repoOrigin = new OriginDAO();
     public ObservableList<String> listOrigin = FXCollections.observableArrayList();
@@ -58,6 +63,9 @@ public class FormulaireController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Changement de la font du Logo
+            textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
+
         // Vide les précédentes données récupérées
             dataReceive.clear();
 

@@ -1,5 +1,6 @@
 package com.mealwith.gui.Home;
 
+import com.mealwith.Service.CustomsFonts;
 import com.mealwith.Service.SceneHandler;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -9,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import org.kordamp.ikonli.javafx.FontIcon;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.List;
@@ -21,8 +22,14 @@ public class HomeController implements Initializable {
     @FXML
     public ImageView ImgLogo,ImgRecipes,ImgDashboard,ImgIngredients,ImgCustomers,ImgOrders,ImgComments;
 
+    private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
+    public Text textLogo; // Logotype
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Changement de la font du Logo
+        textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
+
         // Récupération des images
             Image Img = new Image("img/Logo Mealwith.png");
             ImgLogo.setImage(Img);
