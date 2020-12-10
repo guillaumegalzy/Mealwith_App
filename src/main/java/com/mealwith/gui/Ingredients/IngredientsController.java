@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -15,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -41,6 +43,8 @@ public class IngredientsController implements Initializable {
     public ObservableList<Ingredients> listIngredients = FXCollections.observableArrayList();
     public SceneHandler sceneHandler = new SceneHandler();
     public static List<Object> dataSend = new ArrayList<>(); // Données qui seront stockées par ce controlleur et utilisé par le controlleur de destination
+    @FXML
+    public FontIcon iconDelete,iconAdd,iconModify,iconDetails;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -69,6 +73,19 @@ public class IngredientsController implements Initializable {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
+
+        // Ajout icônes sur les bouttons
+            iconDelete.setIconLiteral("fa-trash-o");
+            iconDelete.setIconSize(20);
+
+            iconAdd.setIconLiteral("fa-plus");
+            iconAdd.setIconSize(20);
+
+            iconDetails.setIconLiteral("fa-search");
+            iconDetails.setIconSize(20);
+
+            iconModify.setIconLiteral("fa-pencil");
+            iconModify.setIconSize(20);
     }
 
     public void btnClick(ActionEvent actionEvent) throws SQLException {
