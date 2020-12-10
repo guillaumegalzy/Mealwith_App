@@ -81,7 +81,7 @@ public class UsersDAO extends DAO{
     /**
      * Récupère l'ensemble des users de la BDD, trié par id croissant
      * @return une list de user
-     * @throws SQLException
+     * @throws SQLException Exception possible liée à l'usage de la BDD
      */
     public List<Users> List() throws SQLException {
         // Création de la requête de recherche de l'ensemble des users

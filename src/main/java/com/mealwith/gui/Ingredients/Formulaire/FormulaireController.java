@@ -113,12 +113,6 @@ public class FormulaireController implements Initializable {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
-        /*// Ajout gestionnaire d'écoute sur la combobox, affiche l'inputArtist si la valeur sélectionnée est "Ajouter un nouvel artiste"
-        this.comboArtist.valueProperty().addListener((observable, oldValue, newValue) ->
-                inputArtist.setVisible(newValue.equals("Ajouter un nouvel artiste")));*/
-
-
     }
 
     /**
