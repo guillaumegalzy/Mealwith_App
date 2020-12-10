@@ -50,12 +50,18 @@ public class CategoriesIngredientsDAO extends DAO{
         // Ferme la requête
     }
 
-    public String GetNameByID(int id) throws SQLException {
+    /**
+     * Trouve le nom de la catégorie grâce à son ID
+     * @param categoryID ID de la catégorie pour laquelle on veut récupérer le nom
+     * @return Nom de la catégorie envoyé en paramètre
+     * @throws SQLException SQLException Exception possible liée à l'usage de la BDD
+     */
+    public String GetNameByID(int categoryID) throws SQLException {
         // Création de la requête de recherche de l'ensemble des users
             PreparedStatement getNameByID = con.prepareStatement("SELECT name from ingredient_category WHERE id=?");
 
         // Définit le critère de recherche pour la requête préparée
-            getNameByID.setInt(1,id);
+            getNameByID.setInt(1,categoryID);
 
         // Exécute la requête
             ResultSet result = getNameByID.executeQuery();
@@ -66,6 +72,29 @@ public class CategoriesIngredientsDAO extends DAO{
             getNameByID.close();
 
         return result.getString(1);
+    }
+
+    /**
+     * Trouve l'ID de la catégorie grâce à son nom
+     * @param categoryName Nom de la catégorie pour laquelle on veut récupérer l'ID
+     * @return ID de la catégorie envoyé en paramètre
+     * @throws SQLException Exception possible liée à l'usage de la BDD
+     */
+    public int GetIDByName(String categoryName) throws SQLException {
+        // Création de la requête de recherche de l'ensemble des users
+        PreparedStatement getIDByName = con.prepareStatement("SELECT id from ingredient_category WHERE name=?");
+
+        // Définit le critère de recherche pour la requête préparée
+            getIDByName.setString(1,categoryName);
+
+        // Exécute la requête
+            ResultSet result = getIDByName.executeQuery();
+
+            result.first();
+
+        // Ferme la requête
+            getIDByName.close();
+            return result.getInt(1);
     }
 
     /**
