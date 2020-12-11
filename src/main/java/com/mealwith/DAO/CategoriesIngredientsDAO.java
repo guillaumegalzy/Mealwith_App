@@ -1,6 +1,7 @@
 package com.mealwith.DAO;
 
 import com.mealwith.Entity.CategoriesIngredients;
+import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
 
 import java.sql.PreparedStatement;
@@ -9,13 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class CategoriesIngredientsDAO extends DAO{
+public class CategoriesIngredientsDAO{
     private final List<CategoriesIngredients> repoCategories = FXCollections.observableArrayList();
-
-    public CategoriesIngredientsDAO() {
-        // Utilisation du constructeur par défault, sans paramètres, de la classe parente DAO préparamétrée pour la BDD 'mealwith'
-        super();
-    }
 
     public void Insert(CategoriesIngredients categories) throws SQLException {
         // Création de la requête d'ajout d'un utilisateur
@@ -58,7 +54,7 @@ public class CategoriesIngredientsDAO extends DAO{
      */
     public String GetNameByID(int categoryID) throws SQLException {
         // Création de la requête de recherche de l'ensemble des users
-            PreparedStatement getNameByID = con.prepareStatement("SELECT name from ingredient_category WHERE id=?");
+            PreparedStatement getNameByID = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT name from ingredient_category WHERE id=?");
 
         // Définit le critère de recherche pour la requête préparée
             getNameByID.setInt(1,categoryID);
@@ -71,6 +67,8 @@ public class CategoriesIngredientsDAO extends DAO{
         // Ferme la requête
             getNameByID.close();
 
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
         return result.getString(1);
     }
 
@@ -82,7 +80,7 @@ public class CategoriesIngredientsDAO extends DAO{
      */
     public int GetIDByName(String categoryName) throws SQLException {
         // Création de la requête de recherche de l'ensemble des users
-        PreparedStatement getIDByName = con.prepareStatement("SELECT id from ingredient_category WHERE name=?");
+        PreparedStatement getIDByName = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT id from ingredient_category WHERE name=?");
 
         // Définit le critère de recherche pour la requête préparée
             getIDByName.setString(1,categoryName);
@@ -94,6 +92,10 @@ public class CategoriesIngredientsDAO extends DAO{
 
         // Ferme la requête
             getIDByName.close();
+
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
+
             return result.getInt(1);
     }
 
@@ -104,7 +106,7 @@ public class CategoriesIngredientsDAO extends DAO{
      */
     public List<CategoriesIngredients> List() throws SQLException {
         // Création de la requête de recherche de l'ensemble des users
-            Statement listAll = con.createStatement();
+            Statement listAll = DataHolder.getINSTANCE().getCon().createStatement();
 
         // Exécute la requête et récupération du résultat
             ResultSet result = listAll.executeQuery("SELECT * from ingredient_category");
@@ -122,6 +124,9 @@ public class CategoriesIngredientsDAO extends DAO{
 
         // Ferme le Resulset
             listAll.close();
+
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
 
         return repoCategories;
     }

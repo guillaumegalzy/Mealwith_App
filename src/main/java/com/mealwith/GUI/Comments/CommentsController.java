@@ -4,8 +4,6 @@ import com.mealwith.DAO.CommentsDAO;
 import com.mealwith.Entity.Comment;
 import com.mealwith.Service.CustomsFonts;
 import com.mealwith.Service.DataHolder;
-import com.mealwith.Service.SceneHandler;
-import com.mealwith.Service.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -54,7 +52,6 @@ public class CommentsController implements Initializable {
     public HBox Home;
     private List<Comment> comments;
     private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
-    public SceneHandler sceneHandler = new SceneHandler();
 
     @FXML
     private ObservableList<Comment> model = FXCollections.observableArrayList();
@@ -100,11 +97,10 @@ public class CommentsController implements Initializable {
         if(c == null || e.getClickCount() < 2){return;}
         ArrayList<Object> list = new ArrayList<>();
         list.add(c);
-        DataHolder.getINSTANCE().setList(list);
-
-        SceneManager sm = new SceneManager();
+        DataHolder dataHolder = DataHolder.getINSTANCE();
+        dataHolder.setList(list);
         Stage stage = (Stage) commentsTable.getScene().getWindow();
-        sm.ChangeScene(stage, "detail");
+        dataHolder.ChangeScene(stage, "Comments","detail");
     }
 
     @Override
@@ -117,7 +113,6 @@ public class CommentsController implements Initializable {
         ImgLogo.setImage(Img);
 
         // Gestionnaire d'écoute sur le logo pour renvoyer au menu
-        Home.setOnMouseClicked(event -> sceneHandler.setScene(event, Home.getId(), Home.getId()));
-
+        Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(), Home.getId(), Home.getId()));
     }
 }

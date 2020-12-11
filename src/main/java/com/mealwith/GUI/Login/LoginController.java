@@ -3,8 +3,8 @@ package com.mealwith.GUI.Login;
 import com.mealwith.DAO.UsersDAO;
 import com.mealwith.Entity.Users;
 import com.mealwith.Service.CustomsFonts;
+import com.mealwith.Service.DataHolder;
 import com.mealwith.Service.PasswordVerify;
-import com.mealwith.Service.SceneHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -78,9 +79,7 @@ public class LoginController implements Initializable {
                                 //Logged
                                 this.errorMailMessage.setVisible(false);
                                 this.errorMailIndic.setVisible(false);
-
-                                SceneHandler sceneHandler = new SceneHandler();
-                                sceneHandler.setScene(actionEvent,"Home","Home");
+                                DataHolder.getINSTANCE().ChangeScene((Stage) btnLogIn.getScene().getWindow(),"Home","Home");
                             }
                     }
                 } catch (SQLException throwables) {

@@ -1,6 +1,7 @@
 package com.mealwith.DAO;
 
 import com.mealwith.Entity.Ingredients;
+import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,13 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class IngredientsDAO extends DAO{
+public class IngredientsDAO{
     private final List<Ingredients> repoIngredients = FXCollections.observableArrayList();
-
-    public IngredientsDAO() {
-        // Utilisation du constructeur par défault, sans paramètres, de la classe parente DAO préparamétrée pour la BDD 'mealwith'
-        super();
-    }
 
     public void Insert(Ingredients ingredients) throws SQLException {
         // Création de la requête d'ajout d'un utilisateur
@@ -42,9 +38,13 @@ public class IngredientsDAO extends DAO{
         // Ferme la requête
     }
 
+    public void Find() throws SQLException {
+
+    }
+
     public void Delete(Ingredients ingredients) throws SQLException {
         // Création de la requête de recherche de l'ensemble des ingredients
-            PreparedStatement delOne = con.prepareStatement("DELETE from ingredients WHERE id =?");
+            PreparedStatement delOne = DataHolder.getINSTANCE().getCon().prepareStatement("DELETE from ingredients WHERE id =?");
 
         // Définit le critère de recherche pour la requête préparée
             delOne.setInt(1, ingredients.getId());
@@ -54,10 +54,9 @@ public class IngredientsDAO extends DAO{
 
         // Ferme la requête
             delOne.close();
-    }
 
-    public void Find() throws SQLException {
-
+            // Clos la connection
+        DataHolder.getINSTANCE().getCon().close();
     }
 
     /**
@@ -67,7 +66,7 @@ public class IngredientsDAO extends DAO{
      */
     public List<Ingredients> List() throws SQLException {
         // Création de la requête de recherche de l'ensemble des ingrédients
-            Statement listAll = con.createStatement();
+            Statement listAll = DataHolder.getINSTANCE().getCon().createStatement();
 
         // Exécute la requête et récupération du résultat
             ResultSet result = listAll.executeQuery("SELECT * from ingredients ORDER BY id");
@@ -102,6 +101,9 @@ public class IngredientsDAO extends DAO{
 
         // Ferme le Resulset
             result.close();
+
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
 
         return repoIngredients;
     }

@@ -1,7 +1,7 @@
 package com.mealwith.GUI.Home;
 
 import com.mealwith.Service.CustomsFonts;
-import com.mealwith.Service.SceneHandler;
+import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.List;
@@ -58,8 +59,7 @@ public class HomeController implements Initializable {
 
                 // Redirection si clic sur le menu
                 hbox.setOnMouseClicked(event -> {
-                    SceneHandler sceneHandler = new SceneHandler();
-                    sceneHandler.setScene(event,hbox.getId(),hbox.getId());
+                    DataHolder.getINSTANCE().ChangeScene((Stage) hbox.getScene().getWindow(),hbox.getId(),hbox.getId());
                 });
 
                 // Hover effect si survol du menu

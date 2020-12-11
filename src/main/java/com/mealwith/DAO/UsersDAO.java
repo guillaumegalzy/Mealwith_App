@@ -1,55 +1,20 @@
 package com.mealwith.DAO;
 
 import com.mealwith.Entity.Users;
+import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
-public class UsersDAO extends DAO{
+public class UsersDAO{
     private final List<Users> repoUsers = FXCollections.observableArrayList();
-
-    public UsersDAO() {
-        // Utilisation du constructeur par défault, sans paramètres, de la classe parente DAO préparamétrée pour la BDD 'mealwith'
-        super();
-    }
-
-    public void Insert(Users users) throws SQLException {
-        // Création de la requête d'ajout d'un utilisateur
-           
-
-        // Définit les paramètres pour la requête préparée
-
-
-        // Exécute la requête d'ajout
-
-
-        // Ferme la requête
-    }
-
-    public void Update(Users users) throws SQLException {
-        // Création de la requête de màj d'un user
-        
-        // Définit les paramètres pour la requête préparée
-
-        // Exécute la requête
-
-        // Ferme la requête
-    }
-
-    public void Delete(Users users) throws SQLException {
-        // Création de la requête de recherche de l'ensemble des users
-
-        // Définit le critère de recherche pour la requête préparée
-
-        // Exécute la requête
-
-        // Ferme la requête
-    }
 
     public Object FindByMail(String mail) throws SQLException {
         // Création de la requête préparée de recherche du user
-            PreparedStatement oneByMail = con.prepareStatement("SELECT * from users where email=?");
+            PreparedStatement oneByMail = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from users where email=?");
 
         // Définit le critère de recherche pour la requête préparée
             oneByMail.setString(1,mail);
@@ -63,6 +28,10 @@ public class UsersDAO extends DAO{
         } else {
             // On se positionne au premier emplacement du ResultSet
             result.first();
+
+            // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
+
             // Création du user en utilisant le constructeur spécifique renseignant l'ensemble des membres
             return new Users(
                     result.getInt(1),
@@ -76,20 +45,5 @@ public class UsersDAO extends DAO{
                     result.getInt(8)
             );
         }
-    }
-
-    /**
-     * Récupère l'ensemble des users de la BDD, trié par id croissant
-     * @return une list de user
-     * @throws SQLException Exception possible liée à l'usage de la BDD
-     */
-    public List<Users> List() throws SQLException {
-        // Création de la requête de recherche de l'ensemble des users
-
-        // Exécute la requête et récupération du résultat
-
-        // Ferme la requête
-
-        return repoUsers;
     }
 }

@@ -7,9 +7,9 @@ import com.mealwith.Entity.CategoriesIngredients;
 import com.mealwith.Entity.Ingredients;
 import com.mealwith.Entity.Origin;
 import com.mealwith.Entity.Unit;
-import com.mealwith.Service.CustomsFonts;
-import com.mealwith.Service.SceneHandler;
 import com.mealwith.GUI.Ingredients.IngredientsController;
+import com.mealwith.Service.CustomsFonts;
+import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
@@ -59,8 +60,6 @@ public class FormulaireController implements Initializable {
     public ObservableList<String> listUnit = FXCollections.observableArrayList();
     public CategoriesIngredientsDAO repoCatIngr = new CategoriesIngredientsDAO();
     public ObservableList<String> listCatIngr = FXCollections.observableArrayList();
-    public SceneHandler sceneHandler = new SceneHandler();
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -71,7 +70,7 @@ public class FormulaireController implements Initializable {
             dataReceive.clear();
 
         // Ajout gestionnaire d'écoute sur le logo pour renvoyer au menu
-            Home.setOnMouseClicked(event -> sceneHandler.setScene(event,Home.getId(),Home.getId()));
+            Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(),Home.getId(),Home.getId()));
 
         // Ajout gestionnaires d'écoute sur les sliders pour la température et les inputs réciproquement
             sliderTempMin.valueProperty().addListener((observable, oldValue, newValue) -> inputTempMin.setText(String.valueOf(newValue.intValue())));
@@ -214,6 +213,6 @@ public class FormulaireController implements Initializable {
             }*/
 
         // Redirection vers le formulaire 'Ingredients'
-            sceneHandler.setScene(actionEvent,"Ingredients","Ingredients");
+            DataHolder.getINSTANCE().ChangeScene((Stage) btnAccept.getScene().getWindow(),"Ingredients","Ingredients");
     }
 }

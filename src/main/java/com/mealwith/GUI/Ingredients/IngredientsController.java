@@ -4,7 +4,7 @@ import com.mealwith.DAO.IngredientsDAO;
 import com.mealwith.Entity.Ingredients;
 import com.mealwith.Service.AlertMessage;
 import com.mealwith.Service.CustomsFonts;
-import com.mealwith.Service.SceneHandler;
+import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
@@ -52,7 +53,6 @@ public class IngredientsController implements Initializable {
     public Text textLogo; // Logotype
 
     public ObservableList<Ingredients> listIngredients = FXCollections.observableArrayList();
-    public SceneHandler sceneHandler = new SceneHandler();
     public static List<Object> dataSend = new ArrayList<>(); // Données qui seront stockées par ce controlleur et utilisé par le controlleur de destination
     public Map<Label, FontIcon> catFilter = new HashMap<>(); // Map associant les noms des catérogies dans le menu de gauche avec leur icône respective
     public IngredientsDAO repoIngredients = new IngredientsDAO();
@@ -71,7 +71,7 @@ public class IngredientsController implements Initializable {
             ImgLogo.setImage(Img);
 
         // Gestionnaire d'écoute sur le logo pour renvoyer au menu
-            Home.setOnMouseClicked(event -> sceneHandler.setScene(event, Home.getId(), Home.getId()));
+            Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(), Home.getId(), Home.getId()));
 
         // Récupération des ingrédients dans la BDD
             try {
@@ -115,7 +115,7 @@ public class IngredientsController implements Initializable {
                     dataSend.add("Details"); //Stockage de l'opération demandée
                     dataSend.add(tab_ingredient.getSelectionModel().getSelectedItem()); //Stockage du ingredient concerné
                     // Redirection vers le formulaire d'ajout
-                    sceneHandler.setScene(actionEvent, "Ingredients/Formulaire", "Formulaire");
+                    DataHolder.getINSTANCE().ChangeScene((Stage) btnAdd.getScene().getWindow(), "Ingredients/Formulaire", "Formulaire");
                 }
                 break;
 
@@ -124,7 +124,7 @@ public class IngredientsController implements Initializable {
                 // Informe le controlleur du formulaire que l'on veut effectuer un ajout
                 dataSend.add("Add"); //Stockage de l'opération demandée
                 // Redirection vers le formulaire d'ajout
-                sceneHandler.setScene(actionEvent, "Ingredients/Formulaire", "Formulaire");
+                DataHolder.getINSTANCE().ChangeScene((Stage) btnAdd.getScene().getWindow(), "Ingredients/Formulaire", "Formulaire");
                 break;
 
             // Modification d'un ingredient existant
@@ -136,7 +136,7 @@ public class IngredientsController implements Initializable {
                     dataSend.add("Modify"); //Stockage de l'opération demandée
                     dataSend.add(tab_ingredient.getSelectionModel().getSelectedItem()); //Stockage du ingredient concerné
                     // Redirection vers le formulaire de modification
-                    sceneHandler.setScene(actionEvent, "Ingredients/Formulaire", "Formulaire");
+                    DataHolder.getINSTANCE().ChangeScene((Stage) btnAdd.getScene().getWindow(), "Ingredients/Formulaire", "Formulaire");
                 }
                 break;
 

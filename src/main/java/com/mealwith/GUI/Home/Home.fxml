@@ -17,7 +17,7 @@
          <children>
             <ImageView fx:id="ImgLogo" fitHeight="66.0" fitWidth="98.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../resources/img/Logo%20Mealwith.png" />
+                  <Image url="@../../../../../resources/img/Logo Mealwith.png" />
                </image>
             </ImageView>
             <Text fx:id="textLogo" fill="#f27507" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Mealwith">
@@ -50,7 +50,7 @@
                   </Text>
                   <ImageView fx:id="ImgRecipes" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../resources/img/Recipes%20icon.png" />
+                        <Image url="@../../../../../resources/img/Recipes icon.png" />
                      </image>
                   </ImageView>
                </children>
@@ -73,7 +73,7 @@
                   </Text>
                   <ImageView fx:id="ImgDashboard" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../resources/img/Dashboard%20icon.png" />
+                        <Image url="@../../../../../resources/img/Dashboard icon.png" />
                      </image>
                   </ImageView>
                </children>
@@ -96,7 +96,7 @@
                   </Text>
                   <ImageView fx:id="ImgIngredients" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../resources/img/Ingredients%20icon.png" />
+                        <Image url="@../../../../../resources/img/Ingredients icon.png" />
                      </image>
                   </ImageView>
                </children>
@@ -119,7 +119,7 @@
                   </Text>
                   <ImageView fx:id="ImgCustomers" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../resources/img/Customers%20icon.png" />
+                        <Image url="@../../../../../resources/img/Customers icon.png" />
                      </image>
                   </ImageView>
                </children>
@@ -142,7 +142,7 @@
                   </Text>
                   <ImageView fx:id="ImgOrders" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../resources/img/Orders%20icon.png" />
+                        <Image url="@../../../../../resources/img/Orders icon.png" />
                      </image>
                   </ImageView>
                </children>
@@ -165,7 +165,7 @@
                   </Text>
                   <ImageView fx:id="ImgComments" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../resources/img/Comments%20icon.png" />
+                        <Image url="@../../../../../resources/img/Comments icon.png" />
                      </image>
                   </ImageView>
                </children>

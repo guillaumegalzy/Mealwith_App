@@ -1,6 +1,7 @@
 package com.mealwith.DAO;
 
 import com.mealwith.Entity.Origin;
+import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
 
 import java.sql.PreparedStatement;
@@ -9,17 +10,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class OriginDAO extends DAO{
+public class OriginDAO{
     private final List<Origin> repoOrigin = FXCollections.observableArrayList();
 
-    public OriginDAO() {
-        // Utilisation du constructeur par défault, sans paramètres, de la classe parente DAO préparamétrée pour la BDD 'mealwith'
-        super();
-    }
-
     public String GetCountryByID(int id) throws SQLException {
-        // Création de la requête de recherche de l'ensemble des users
-            PreparedStatement getCountryByID = con.prepareStatement("SELECT country from origin WHERE id=?");
+        // Création de la requête de recherche de l'ensemble des pays
+            PreparedStatement getCountryByID = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT country from origin WHERE id=?");
 
         // Définit le critère de recherche pour la requête préparée
             getCountryByID.setInt(1,id);
@@ -32,6 +28,9 @@ public class OriginDAO extends DAO{
         // Ferme la requête
             getCountryByID.close();
 
+        // Clos la connection
+        DataHolder.getINSTANCE().getCon().close();
+
         return result.getString(1);
     }
 
@@ -42,7 +41,7 @@ public class OriginDAO extends DAO{
      */
     public List<Origin> List() throws SQLException {
         // Création de la requête de recherche de l'ensemble des origines
-            Statement listAll = con.createStatement();
+            Statement listAll = DataHolder.getINSTANCE().getCon().createStatement();
 
         // Exécute la requête et récupération du résultat
             ResultSet result = listAll.executeQuery("SELECT * from origin ORDER BY id");
@@ -63,6 +62,8 @@ public class OriginDAO extends DAO{
         // Ferme le Resulset
             result.close();
 
+        // Clos la connection
+        DataHolder.getINSTANCE().getCon().close();
         return repoOrigin;
     }
 }

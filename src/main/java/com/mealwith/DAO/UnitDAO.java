@@ -1,6 +1,7 @@
 package com.mealwith.DAO;
 
 import com.mealwith.Entity.Unit;
+import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
 
 import java.sql.PreparedStatement;
@@ -9,17 +10,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class UnitDAO extends DAO{
+public class UnitDAO{
     private final List<Unit> repoUnit = FXCollections.observableArrayList();
-
-    public UnitDAO() {
-        // Utilisation du constructeur par défault, sans paramètres, de la classe parente DAO préparamétrée pour la BDD 'mealwith'
-        super();
-    }
 
     public String GetTypeByID(int id) throws SQLException {
         // Création de la requête de recherche de l'ensemble des users
-            PreparedStatement getTypeByID = con.prepareStatement("SELECT type from units WHERE id=?");
+            PreparedStatement getTypeByID = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT type from units WHERE id=?");
 
         // Définit le critère de recherche pour la requête préparée
             getTypeByID.setInt(1,id);
@@ -32,6 +28,9 @@ public class UnitDAO extends DAO{
         // Ferme la requête
             getTypeByID.close();
 
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
+
         return result.getString(1);
     }
 
@@ -42,7 +41,7 @@ public class UnitDAO extends DAO{
      */
     public List<Unit> List() throws SQLException {
         // Création de la requête de recherche de l'ensemble des unités
-            Statement listAll = con.createStatement();
+            Statement listAll = DataHolder.getINSTANCE().getCon().createStatement();
 
         // Exécute la requête et récupération du résultat
             ResultSet result = listAll.executeQuery("SELECT * from units ORDER BY id");
@@ -61,6 +60,9 @@ public class UnitDAO extends DAO{
 
         // Ferme le Resulset
             result.close();
+
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
 
         return repoUnit;
     }

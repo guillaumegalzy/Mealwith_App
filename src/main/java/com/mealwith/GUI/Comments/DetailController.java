@@ -3,7 +3,6 @@ package com.mealwith.GUI.Comments;
 import com.mealwith.DAO.CommentsDAO;
 import com.mealwith.Entity.Comment;
 import com.mealwith.Service.DataHolder;
-import com.mealwith.Service.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -35,10 +34,8 @@ public class DetailController implements Initializable {
     }
 
     public void Back(){
-        SceneManager sm = new SceneManager();
-
         Stage stage = (Stage) idField.getScene().getWindow();
-        sm.ChangeScene(stage, "Comments");
+        DataHolder.getINSTANCE().ChangeScene(stage, "Comments","Comments");
     }
 
     public void Delete(ActionEvent actionEvent) {
