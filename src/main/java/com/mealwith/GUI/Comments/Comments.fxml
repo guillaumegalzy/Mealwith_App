@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <BorderPane prefHeight="655.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mealwith.GUI.Comments.CommentsController">
-   <center>
+   <top>
+       <HBox fx:id="Home" alignment="CENTER_LEFT" layoutX="50.0" layoutY="14.0" spacing="30.0" BorderPane.alignment="CENTER_LEFT">
+           <children>
+               <ImageView fx:id="ImgLogo" fitHeight="66.0" fitWidth="98.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../../../../../resources/img/Logo Mealwith.png" />
+                   </image>
+               </ImageView>
+               <Text fx:id="textLogo" fill="#f27507" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Mealwith">
+                   <font>
+                       <Font size="36.0" />
+                   </font>
+               </Text>
+           </children>
+         <BorderPane.margin>
+            <Insets left="10.0" top="10.0" />
+         </BorderPane.margin>
+       </HBox>
+   </top>
+    <center>
       <TableView fx:id="commentsTable" fixedCellSize="24.0" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#AccessDetail" prefHeight="0.0" BorderPane.alignment="CENTER_RIGHT">
         <columns>
           <TableColumn fx:id="colID" editable="false" maxWidth="200.0" minWidth="50.0" prefWidth="150.0" text="ID" />

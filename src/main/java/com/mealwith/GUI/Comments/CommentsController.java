@@ -1,24 +1,34 @@
 package com.mealwith.GUI.Comments;
-import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
+
 import com.mealwith.DAO.CommentsDAO;
 import com.mealwith.Entity.Comment;
+import com.mealwith.Service.CustomsFonts;
+import com.mealwith.Service.DataHolder;
+import com.mealwith.Service.SceneHandler;
+import com.mealwith.Service.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import com.mealwith.Service.DataHolder;
-import com.mealwith.Service.SceneManager;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class CommentsController {
+public class CommentsController implements Initializable {
     @FXML
     public TableView<Comment> commentsTable;
     @FXML
@@ -39,7 +49,12 @@ public class CommentsController {
 
     //private CommentsDAO commentsDAO= new CommentsDAO();
     public Button btnGetList;
+    public ImageView ImgLogo;
+    public Text textLogo;
+    public HBox Home;
     private List<Comment> comments;
+    private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
+    public SceneHandler sceneHandler = new SceneHandler();
 
     @FXML
     private ObservableList<Comment> model = FXCollections.observableArrayList();
@@ -83,12 +98,26 @@ public class CommentsController {
     public void AccessDetail(MouseEvent e){
         Comment c = commentsTable.getSelectionModel().getSelectedItem();
         if(c == null || e.getClickCount() < 2){return;}
-        ArrayList<Object> list = new ArrayList<Object>();
+        ArrayList<Object> list = new ArrayList<>();
         list.add(c);
         DataHolder.getINSTANCE().setList(list);
 
         SceneManager sm = new SceneManager();
         Stage stage = (Stage) commentsTable.getScene().getWindow();
         sm.ChangeScene(stage, "detail");
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Changement de la font du Logo
+        textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
+
+        // Récupération des images
+        Image Img = new Image("img/Logo Mealwith.png");
+        ImgLogo.setImage(Img);
+
+        // Gestionnaire d'écoute sur le logo pour renvoyer au menu
+        Home.setOnMouseClicked(event -> sceneHandler.setScene(event, Home.getId(), Home.getId()));
+
     }
 }
