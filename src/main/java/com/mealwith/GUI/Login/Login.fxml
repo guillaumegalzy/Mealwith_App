@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mealwith.GUI.Login.LoginController">
+   <children>
+      <AnchorPane layoutX="400.0" prefHeight="633.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <children>
+            <VBox prefHeight="633.0" prefWidth="500.0" spacing="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="202.0" prefWidth="460.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Text fx:id="textLogo" fill="#f27507" strokeType="OUTSIDE" strokeWidth="0.0" text="Mealwith">
+                           <font>
+                              <Font size="48.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <VBox alignment="CENTER" spacing="30.0">
+                     <children>
+                        <VBox alignment="CENTER_LEFT" spacing="20.0">
+                           <children>
+                              <HBox alignment="CENTER_RIGHT" spacing="20.0">
+                                 <children>
+                                    <Label prefHeight="27.0" prefWidth="85.0" text="Email">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="inputEmail" prefHeight="25.0" prefWidth="284.0" promptText="Type your email" text="test@test.fr">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </TextField>
+                                    <Text fx:id="errorMailIndic" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red; -fx-font-weight: bold;" text="*" visible="false">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Text fx:id="errorMailMessage" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red; -fx-font-weight: bold;" text="No user with this email" visible="false">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER_LEFT" layoutX="40.0" layoutY="40.0" spacing="20.0">
+                           <children>
+                              <HBox alignment="CENTER_RIGHT" spacing="20.0">
+                                 <children>
+                                    <Label prefHeight="27.0" prefWidth="85.0" text="Password" HBox.hgrow="SOMETIMES">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField fx:id="inputPassword" prefHeight="39.0" prefWidth="284.0" promptText="Type your password">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </PasswordField>
+                                    <Text fx:id="errorPasswordIndic" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red; -fx-font-weight: bold;" text="*" visible="false">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Text fx:id="errorPasswordMessage" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red; -fx-font-weight: bold;" text="Wrong password" visible="false">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Button fx:id="btnLogIn" defaultButton="true" mnemonicParsing="false" onAction="#btnLogIn_Click" prefHeight="51.0" prefWidth="99.0" text="Log In">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                     </padding>
+                  </VBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="460.0" spacing="20.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&#169; Mealwith 2020" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="509.0" prefHeight="600.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fx:id="ImgLogo" fitHeight="633.0" fitWidth="308.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <image>
+                  <Image url="@../../../../../resources/img/LogIn.png" />
+               </image>
+            </ImageView>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </AnchorPane>
+   </children>
+</AnchorPane>

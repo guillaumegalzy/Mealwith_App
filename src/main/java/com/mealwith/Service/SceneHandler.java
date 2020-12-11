@@ -27,7 +27,7 @@ public class SceneHandler {
 
         try {
             // Chargement du FXML demandé en argument et création de la scene associée
-                Parent homeRoot = FXMLLoader.load(getClass().getResource("/com/mealwith/gui/"+ directory + "/" + urlFXML + ".fxml"));
+                Parent homeRoot = FXMLLoader.load(getClass().getResource("/com/mealwith/GUI/" + directory + "/" + urlFXML + ".fxml"));
                 Scene scene = new Scene(homeRoot);
                 stage.setScene(scene);
 

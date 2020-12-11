@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -15,13 +16,14 @@ public class App extends Application {
     @Override
     public void start(Stage primarystage) {
         primarystage.setTitle("MealwithApp");
+        primarystage.getIcons().add(new Image("/img/hamburger.png"));
         primarystage.centerOnScreen();
         primarystage.setResizable(false);
 
         // Premier parent
         Parent home = null;
         try {
-            home = FXMLLoader.load(getClass().getResource("/com/mealwith/gui/Login/Login.fxml"));
+            home = FXMLLoader.load(getClass().getResource("/com/mealwith/GUI/Login/Login.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
