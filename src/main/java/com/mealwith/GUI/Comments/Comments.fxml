@@ -47,7 +47,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <TextField fx:id="userIDText" />
-                        <Button mnemonicParsing="false" onAction="#GetListByUser" text="Button" />
+                        <Button mnemonicParsing="false" onAction="#GetListByUser" text="OK" />
                      </children>
                   </HBox>
                </children>
@@ -58,7 +58,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <TextField fx:id="recipeIDText" />
-                        <Button mnemonicParsing="false" onAction="#GetListByRecipe" text="Button" />
+                        <Button mnemonicParsing="false" onAction="#GetListByRecipe" text="OK" />
                      </children>
                   </HBox>
                </children>
@@ -69,7 +69,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <TextField fx:id="ingredientIDText" />
-                        <Button mnemonicParsing="false" onAction="#GetListByIngredient" text="Button" />
+                        <Button mnemonicParsing="false" onAction="#GetListByIngredient" text="OK" />
                      </children>
                   </HBox>
                </children>
