@@ -67,8 +67,7 @@ public class IngredientsController implements Initializable {
             dataSend.clear();
 
         // Récupération des images
-            Image Img = new Image("img/Logo Mealwith.png");
-            ImgLogo.setImage(Img);
+            ImgLogo.setImage(new Image("img/Logo Mealwith.png"));
 
         // Gestionnaire d'écoute sur le logo pour renvoyer au menu
             Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(), Home.getId(), Home.getId()));

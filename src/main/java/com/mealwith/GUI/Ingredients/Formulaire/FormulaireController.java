@@ -16,16 +16,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.File;
 import java.net.URL;
@@ -38,7 +39,7 @@ import java.util.ResourceBundle;
 
 public class FormulaireController implements Initializable {
     @FXML
-    public HBox Home;
+    public HBox Home,RatingHBox,RatingHBoxStar;
     @FXML
     public ImageView ImgLogo,ImgIngredient;
     @FXML
@@ -60,6 +61,7 @@ public class FormulaireController implements Initializable {
     public ObservableList<String> listUnit = FXCollections.observableArrayList();
     public CategoriesIngredientsDAO repoCatIngr = new CategoriesIngredientsDAO();
     public ObservableList<String> listCatIngr = FXCollections.observableArrayList();
+    public List<FontIcon> starRatings = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -83,8 +85,13 @@ public class FormulaireController implements Initializable {
             comboUnit.setOnInputMethodTextChanged(event -> comboUnit.cancelEdit());
 
         // Récupération des images
-            Image Img = new Image("img/Logo Mealwith.png");
-            ImgLogo.setImage(Img);
+            ImgLogo.setImage(new Image("img/Logo Mealwith.png"));
+            ImgIngredient.setImage(new Image("img/Ingredients.png"));
+
+        // Récupération des étoiles du ratings
+            for (Node star: RatingHBoxStar.getChildren()) {
+                starRatings.add((FontIcon) star);
+            }
 
         // Remplissage des combobox
             try {
@@ -153,6 +160,10 @@ public class FormulaireController implements Initializable {
             this.comboCategory.getSelectionModel().select(ingredients.getCategory_name());
             this.comboUnit.getSelectionModel().select(ingredients.getUnit_name());
             this.comboOrigin.getSelectionModel().select(ingredients.getOrigin_name());
+            this.RatingHBox.setVisible(true);
+            for (FontIcon starIcon: starRatings) {
+                starIcon.setIconColor(Color.rgb(255,225,77));
+            }
         }
     }
 
@@ -160,48 +171,61 @@ public class FormulaireController implements Initializable {
      * Rend éditable l'ensemble des champs et ajout du gestionnaire d'écoute sur l'image pour pouvoir la changer
       * @param operation Opération demandée "Modify","Add" ou "Details". Donnée émise par le controlleur de provenance
      */
-    public void unlockField(String operation){
+    public void unlockField(String operation) {
         // S'il s'agit d'une modification exclusivement
-        if(operation.equals("Modify")) {
+        if (operation.equals("Modify") || operation.equals("Add")) {
 
             // rend editable les champs et les sliders
-                this.inputID.setEditable(true);
-                this.inputName.setEditable(true);
-                this.inputPrice.setEditable(true);
-                this.inputTempMin.setEditable(true);
-                this.inputTempMax.setEditable(true);
-                this.sliderTempMin.setDisable(false);
-                this.sliderTempMax.setDisable(false);
-                this.comboCategory.setDisable(false);
-                this.comboUnit.setDisable(false);
-                this.comboOrigin.setDisable(false);
+            this.inputID.setDisable(true);
+            this.inputName.setEditable(true);
+            this.inputPrice.setEditable(true);
+            this.inputTempMin.setEditable(true);
+            this.inputTempMax.setEditable(true);
+            this.sliderTempMin.setDisable(false);
+            this.sliderTempMax.setDisable(false);
+            this.comboCategory.setDisable(false);
+            this.comboUnit.setDisable(false);
+            this.comboOrigin.setDisable(false);
 
             // Ajout gestionnaire d'écoute sur l'image, pour permettre sa modification
-                ImgIngredient.setCursor(Cursor.cursor("HAND"));
-                ImgIngredient.setOnMouseClicked(event -> {
-                    // Création et paramétrage d'un filechooser
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Sélectionner une image");
-                    fileChooser.getExtensionFilters().addAll( //Extensions autorisées
-                            new FileChooser.ExtensionFilter("Image (.jpg, .jpeg, .png)", "*.jpeg", "*.jpg", "*.png")
-                    );
+            ImgIngredient.setCursor(Cursor.cursor("HAND"));
 
-                    //Chemin d'accès au fichier de resources du projet pour paramétrage du chemin d'accès par défaut
-                    String directory = System.getProperty("user.dir");
-                    Path path = Paths.get(directory + "/src/main/resources/img");
-                    fileChooser.setInitialDirectory(new File(String.valueOf(path)));
+            // FileChooser on Click
+            ImgIngredient.setOnMouseClicked(event -> {
+                // Création et paramétrage d'un filechooser
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Sélectionner une image");
+                fileChooser.getExtensionFilters().addAll( //Extensions autorisées
+                        new FileChooser.ExtensionFilter("Image (.jpg, .jpeg, .png)", "*.jpeg", "*.jpg", "*.png")
+                );
 
-                    // Ouverture de la fenêtre de dialogue et récupération de l'image choisie
-                    File selectedFile = fileChooser.showOpenDialog(ImgIngredient.getScene().getWindow());
+                //Chemin d'accès au fichier de resources du projet pour paramétrage du chemin d'accès par défaut
+                String directory = System.getProperty("user.dir");
+                Path path = Paths.get(directory + "/src/main/resources/img");
+                fileChooser.setInitialDirectory(new File(String.valueOf(path)));
 
-                    // Modification de l'image prévisualisée si elle a été choisie
-                    if (selectedFile != null) {
-                        Image newImage = new Image("/img/" + selectedFile.getName());
-                        ImgIngredient.setImage(newImage);
-                    }
-                });
+                // Ouverture de la fenêtre de dialogue et récupération de l'image choisie
+                File selectedFile = fileChooser.showOpenDialog(ImgIngredient.getScene().getWindow());
+
+                // Modification de l'image prévisualisée si elle a été choisie
+                if (selectedFile != null) {
+                    Image newImage = new Image("/img/" + selectedFile.getName());
+                    ImgIngredient.setImage(newImage);
+                }
+            });
+
+            // Affichage PopUp info on Over
+            ImgIngredient.setOnMouseEntered(event -> {
+                PopOver popup = new PopOver();
+                Label infoPopup = new Label();
+                infoPopup.setText("Click on the image to change it");
+                popup.setContentNode(infoPopup);
+                popup.show(ImgIngredient);
+                popup.setAutoHide(true);
+            });
         }
     }
+
     public void btnClick(ActionEvent actionEvent) {
         // Récupère l'ID du bouton dans une string
             String btnText = ((Button)actionEvent.getSource()).getId();

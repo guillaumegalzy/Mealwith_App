@@ -32,26 +32,13 @@ public class HomeController implements Initializable {
         textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
 
         // Récupération des images
-            Image Img = new Image("img/Logo Mealwith.png");
-            ImgLogo.setImage(Img);
-
-            Img = new Image("img/Recipes icon.png");
-            ImgRecipes.setImage(Img);
-
-            Img = new Image("img/Dashboard icon.png");
-            ImgDashboard.setImage(Img);
-
-            Img = new Image("img/Ingredients icon.png");
-            ImgIngredients.setImage(Img);
-
-            Img = new Image("img/Customers icon.png");
-            ImgCustomers.setImage(Img);
-
-            Img = new Image("img/Orders icon.png");
-            ImgOrders.setImage(Img);
-
-            Img = new Image("img/Comments icon.png");
-            ImgComments.setImage(Img);
+            ImgLogo.setImage(new Image("img/Logo Mealwith.png"));
+            ImgRecipes.setImage(new Image("img/Recipes icon.png"));
+            ImgDashboard.setImage(new Image("img/Dashboard icon.png"));
+            ImgIngredients.setImage(new Image("img/Ingredients icon.png"));
+            ImgCustomers.setImage(new Image("img/Customers icon.png"));
+            ImgOrders.setImage(new Image("img/Orders icon.png"));
+            ImgComments.setImage(new Image("img/Comments icon.png"));
 
         // Ajout des gestionnaires d'écoute sur les menus
             List<HBox> hBoxList = FXCollections.observableArrayList(Recipes,Dashboard,Ingredients,Customers,Orders,Comments);

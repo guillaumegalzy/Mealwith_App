@@ -1,6 +1,6 @@
 package com.mealwith.DAO;
 
-import com.mealwith.Entity.CategoriesIngredients;
+import com.mealwith.Entity.CategoriesRecipes;
 import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
 
@@ -10,8 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class CategoriesIngredientsDAO{
-    private final List<CategoriesIngredients> repoCategories = FXCollections.observableArrayList();
+public class CategoriesRecipesDAO {
+    private final List<CategoriesRecipes> repoCategories = FXCollections.observableArrayList();
 
     /**
      * Trouve le nom de la catégorie grâce à son ID
@@ -21,7 +21,7 @@ public class CategoriesIngredientsDAO{
      */
     public String GetNameByID(int categoryID) throws SQLException {
         // Création de la requête de recherche de l'ensemble des users
-            PreparedStatement getNameByID = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT name from ingredient_category WHERE id=?");
+            PreparedStatement getNameByID = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT name from recipe_category WHERE id=?");
 
         // Définit le critère de recherche pour la requête préparée
             getNameByID.setInt(1,categoryID);
@@ -47,7 +47,7 @@ public class CategoriesIngredientsDAO{
      */
     public int GetIDByName(String categoryName) throws SQLException {
         // Création de la requête de recherche de l'ensemble des users
-        PreparedStatement getIDByName = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT id from ingredient_category WHERE name=?");
+        PreparedStatement getIDByName = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT id from recipe_category WHERE name=?");
 
         // Définit le critère de recherche pour la requête préparée
             getIDByName.setString(1,categoryName);
@@ -71,15 +71,15 @@ public class CategoriesIngredientsDAO{
      * @return une list de user
      * @throws SQLException Exception possible liée à l'usage de la BDD
      */
-    public List<CategoriesIngredients> List() throws SQLException {
+    public List<CategoriesRecipes> List() throws SQLException {
         // Création de la requête de recherche de l'ensemble des users
             Statement listAll = DataHolder.getINSTANCE().getCon().createStatement();
 
         // Exécute la requête et récupération du résultat
-            ResultSet result = listAll.executeQuery("SELECT * from ingredient_category");
+            ResultSet result = listAll.executeQuery("SELECT * from recipe_category");
 
             while(result.next()){
-                repoCategories.add(new CategoriesIngredients(
+                repoCategories.add(new CategoriesRecipes(
                         result.getInt(1),
                         result.getString(2)
                     )

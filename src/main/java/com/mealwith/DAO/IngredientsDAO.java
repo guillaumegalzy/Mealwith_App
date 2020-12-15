@@ -15,7 +15,7 @@ import java.util.List;
 public class IngredientsDAO{
     private final List<Ingredients> repoIngredients = FXCollections.observableArrayList();
 
-    public void Insert(Ingredients ingredients) throws SQLException {
+    public void Insert(Ingredients ingredients) {
         // Création de la requête d'ajout d'un utilisateur
 
 
@@ -28,7 +28,7 @@ public class IngredientsDAO{
         // Ferme la requête
     }
 
-    public void Update(Ingredients ingredients) throws SQLException {
+    public void Update(Ingredients ingredients) {
         // Création de la requête de màj d'un user
 
         // Définit les paramètres pour la requête préparée
@@ -38,8 +38,42 @@ public class IngredientsDAO{
         // Ferme la requête
     }
 
-    public void Find() throws SQLException {
+    /**
+     * Récupère un ingredient spécifique en BDD via son ID
+     * @param ingredientID ID de l'ingredient en BDD
+     * @return Ingredients
+     */
+    public Ingredients Find(int ingredientID) throws SQLException {
+        // Création de la requête de recherche de l'ensemble des ingredients
+            PreparedStatement findOne = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from ingredients WHERE id =?");
 
+        // Définit le critère de recherche pour la requête préparée
+            findOne.setInt(1, ingredientID);
+
+        // Exécute la requête
+            ResultSet result = findOne.executeQuery();
+
+        // Ferme la requête
+            findOne.close();
+
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
+
+            result.first();
+
+        return new Ingredients(
+                result.getInt(1),
+                result.getInt(2),
+                result.getInt(3),
+                result.getInt(4),
+                result.getString(5),
+                result.getDouble(6),
+                result.getInt(7),
+                result.getInt(8),
+                result.getInt(9),
+                result.getString(10),
+                new ImageView(new Image(result.getString(10)))
+        );
     }
 
     public void Delete(Ingredients ingredients) throws SQLException {
@@ -72,13 +106,6 @@ public class IngredientsDAO{
             ResultSet result = listAll.executeQuery("SELECT * from ingredients ORDER BY id");
 
         while(result.next()){
-            // Crée une image à partir de l'url inscrit dans la bdd sous le champ 'picture'
-                Image image = new Image(result.getString(10));
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(100);
-                imageView.setFitHeight(100);
-                imageView.setPreserveRatio(true);
-
             // Ajoute l'ingrédient dans le repo
                 repoIngredients.add(new Ingredients(
                                 result.getInt(1),
@@ -91,7 +118,7 @@ public class IngredientsDAO{
                                 result.getInt(8),
                                 result.getInt(9),
                                 result.getString(10),
-                                imageView
+                                new ImageView(new Image(result.getString(10)))
                         )
                 );
         }

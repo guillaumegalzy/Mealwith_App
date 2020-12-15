@@ -1,0 +1,11 @@
+.combo-box-base:disabled,.combo-box-base:disabled>.cell{
+    -fx-opacity: 1;
+    -fx-text-fill: #000;
+    -fx-background-color: #fff;
+}
+
+.slider:disabled {
+
+    -fx-opacity: 1;
+    -fx-text-fill: #000;
+}

@@ -40,8 +40,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Image du logIn
-            Image logInImg = new Image("img/LogIn.png");
-            ImgLogo.setImage(logInImg);
+            ImgLogo.setImage(new Image("img/LogIn.png"));
 
         // Changement de la font du Logo
             textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("100")));

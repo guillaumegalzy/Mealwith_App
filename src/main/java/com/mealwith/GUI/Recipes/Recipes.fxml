@@ -1,14 +1,189 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.mealwith.GUI.Recipes.RecipesController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@Recipes.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mealwith.GUI.Recipes.RecipesController">
+    <children>
+        <VBox layoutY="24.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox fx:id="Home" alignment="CENTER_LEFT" spacing="30.0">
+                    <children>
+                        <ImageView fx:id="ImgLogo" fitHeight="66.0" fitWidth="98.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../../../resources/img/Logo Mealwith.png" />
+                            </image>
+                        </ImageView>
+                        <Text fx:id="textLogo" fill="#f27507" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Mealwith">
+                            <font>
+                                <Font size="36.0" />
+                            </font>
+                            <HBox.margin>
+                                <Insets left="30.0" />
+                            </HBox.margin>
+                        </Text>
+                    </children>
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" spacing="30.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <Label style="-fx-font-weight: bold;" text="Search">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Label>
+                        <TextField prefHeight="25.0" prefWidth="603.0" />
+                    </children>
+                    <VBox.margin>
+                        <Insets right="20.0" />
+                    </VBox.margin>
+                    <padding>
+                        <Insets right="20.0" />
+                    </padding>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="589.0" prefWidth="980.0" spacing="50.0">
+                    <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="589.0" prefWidth="197.0" spacing="20.0">
+                            <children>
+                                <Text layoutX="69.0" layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Categories" textAlignment="CENTER" wrappingWidth="245.66015625">
+                                    <font>
+                                        <Font size="24.0" />
+                                    </font>
+                                </Text>
+                                <VBox fx:id="catMenu" alignment="CENTER_LEFT" spacing="20.0">
+                                    <children>
+                                        <Label fx:id="catAll" contentDisplay="RIGHT" onMouseClicked="#MenuClick" text="All">
+                                            <font>
+                                                <Font size="24.0" />
+                                            </font>
+                                            <graphic>
+                                                <FontIcon fx:id="catAllIcon" iconLiteral="fa-filter" />
+                                            </graphic>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Label>
+                                        <Label fx:id="catBreak" contentDisplay="RIGHT" onMouseClicked="#MenuClick" text="Breakfast">
+                                            <font>
+                                                <Font size="24.0" />
+                                            </font>
+                                            <graphic>
+                                                <FontIcon fx:id="catBreakIcon" iconLiteral="fa-filter" visible="false" />
+                                            </graphic>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Label>
+                                        <Label fx:id="catDess" contentDisplay="RIGHT" onMouseClicked="#MenuClick" prefHeight="35.0" prefWidth="253.0" text="Dessert">
+                                            <font>
+                                                <Font size="24.0" />
+                                            </font>
+                                            <graphic>
+                                                <FontIcon fx:id="catDessIcon" iconLiteral="fa-filter" visible="false" />
+                                            </graphic>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Label>
+                                        <Label fx:id="catMain" contentDisplay="RIGHT" onMouseClicked="#MenuClick" text="Main course">
+                                            <font>
+                                                <Font size="24.0" />
+                                            </font>
+                                            <graphic>
+                                                <FontIcon fx:id="catMainIcon" iconLiteral="fa-filter" visible="false" />
+                                            </graphic>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Label>
+                                        <Label fx:id="catSide" contentDisplay="RIGHT" onMouseClicked="#MenuClick" text="Side dish">
+                                            <font>
+                                                <Font size="24.0" />
+                                            </font>
+                                            <graphic>
+                                                <FontIcon fx:id="catSideIcon" iconLiteral="fa-filter" visible="false" />
+                                            </graphic>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Label>
+                              <Label fx:id="catSnack" contentDisplay="RIGHT" layoutX="10.0" layoutY="230.0" onMouseClicked="#MenuClick" text="Snack">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                                 <graphic>
+                                    <FontIcon fx:id="catSnackIcon" iconLiteral="fa-filter" visible="false" />
+                                 </graphic>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label fx:id="catSoup" contentDisplay="RIGHT" layoutX="10.0" layoutY="285.0" onMouseClicked="#MenuClick" text="Soup">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                                 <graphic>
+                                    <FontIcon fx:id="catSoupIcon" iconLiteral="fa-filter" visible="false" />
+                                 </graphic>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                        <TableView fx:id="tab_recipes" prefHeight="589.0" prefWidth="519.0">
+                            <columns>
+                                <TableColumn fx:id="column_ID" prefWidth="57.0" resizable="false" text="ID" />
+                                <TableColumn fx:id="column_category" prefWidth="111.0" resizable="false" text="Category" />
+                                <TableColumn fx:id="column_name" prefWidth="123.0" resizable="false" text="Name" />
+                                <TableColumn fx:id="column_picture" prefWidth="174.0" resizable="false" text="Picture" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                        <VBox alignment="CENTER" prefHeight="589.0" prefWidth="216.0" spacing="80.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Button fx:id="btnDetails" defaultButton="true" mnemonicParsing="false" onAction="#btnClick" prefHeight="28.0" prefWidth="112.0" text="Ingredients">
+                                    <effect>
+                                        <DropShadow />
+                                    </effect>
+                                    <graphic>
+                                        <FontIcon iconLiteral="far-list-alt" iconSize="20" />
+                                    </graphic>
+                                </Button>
+                            </children>
+                            <HBox.margin>
+                                <Insets right="20.0" />
+                            </HBox.margin>
+                        </VBox>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </VBox.margin>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="30.0" right="10.0" top="10.0" />
+            </padding>
+        </VBox>
+    </children>
 </AnchorPane>

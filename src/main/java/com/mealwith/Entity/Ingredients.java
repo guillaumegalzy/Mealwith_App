@@ -3,8 +3,6 @@ package com.mealwith.Entity;
 import com.mealwith.DAO.CategoriesIngredientsDAO;
 import com.mealwith.DAO.OriginDAO;
 import com.mealwith.DAO.UnitDAO;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.sql.SQLException;
@@ -49,6 +47,9 @@ public class Ingredients {
         this.shelf_life = shelf_life;
         this.picture = picture;
         this.picture_Img = picture_Img;
+        this.picture_Img.setFitWidth(100);
+        this.picture_Img.setFitHeight(100);
+        this.picture_Img.setPreserveRatio(true);
     }
 
     public String getCategory_name() {

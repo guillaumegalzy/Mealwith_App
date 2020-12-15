@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mealwith.GUI.Ingredients.IngredientsController">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@Ingredients.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mealwith.GUI.Ingredients.IngredientsController">
    <children>
       <VBox layoutY="24.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -127,11 +127,11 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <TableView fx:id="tab_ingredient" prefHeight="589.0" prefWidth="519.0" tableMenuButtonVisible="true">
+                  <TableView fx:id="tab_ingredient" prefHeight="589.0" prefWidth="519.0">
                      <columns>
-                        <TableColumn fx:id="column_ID" prefWidth="98.0" resizable="false" text="ID" />
-                        <TableColumn fx:id="column_category" prefWidth="125.0" resizable="false" text="Category" />
-                        <TableColumn fx:id="column_ingredient" prefWidth="117.0" resizable="false" text="Ingredient" />
+                        <TableColumn fx:id="column_ID" prefWidth="57.0" resizable="false" text="ID" />
+                        <TableColumn fx:id="column_category" prefWidth="136.0" resizable="false" text="Category" />
+                        <TableColumn fx:id="column_ingredient" prefWidth="147.0" resizable="false" text="Ingredient" />
                         <TableColumn fx:id="column_picture" prefWidth="125.0" resizable="false" text="Picture" />
                      </columns>
                      <columnResizePolicy>
