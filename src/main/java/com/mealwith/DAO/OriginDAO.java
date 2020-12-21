@@ -35,6 +35,36 @@ public class OriginDAO{
     }
 
     /**
+     * Trouve l'origine portant un ID spécifique
+     * @param id ID de l'origine à récupérer
+     * @return Origine
+     * @throws SQLException Exception possible liée à l'usage de la BDD
+     */
+    public Origin FindByID(int id) throws SQLException {
+        // Création de la requête de recherche de l'ensemble des pays
+        PreparedStatement findOriginByID = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from origin WHERE id=?");
+
+        // Définit le critère de recherche pour la requête préparée
+        findOriginByID.setInt(1,id);
+
+        // Exécute la requête
+        ResultSet result = findOriginByID.executeQuery();
+
+        result.first();
+
+        // Ferme la requête
+        findOriginByID.close();
+
+        // Clos la connection
+        DataHolder.getINSTANCE().getCon().close();
+
+        return new Origin(
+                result.getInt(1),
+                result.getString(2),
+                result.getString(3));
+    }
+
+    /**
      * Récupère l'ensemble des origines de la BDD, trié par id croissant
      * @return la liste des origines inscrit dans la BDD
      * @throws SQLException erreur lors de la requête SQL

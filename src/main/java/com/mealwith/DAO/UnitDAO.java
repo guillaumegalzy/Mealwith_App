@@ -35,6 +35,35 @@ public class UnitDAO{
     }
 
     /**
+     * Trouve l'unité portant un ID spécifique
+     * @param id ID de l'unité à récupérer
+     * @return Unité
+     * @throws SQLException Exception possible liée à l'usage de la BDD
+     */
+    public Unit FindByID(int id) throws SQLException {
+        // Création de la requête de recherche de l'ensemble des pays
+        PreparedStatement findUnitByID = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from units WHERE id=?");
+
+        // Définit le critère de recherche pour la requête préparée
+        findUnitByID.setInt(1,id);
+
+        // Exécute la requête
+        ResultSet result = findUnitByID.executeQuery();
+
+        result.first();
+
+        // Ferme la requête
+        findUnitByID.close();
+
+        // Clos la connection
+        DataHolder.getINSTANCE().getCon().close();
+
+        return new Unit(
+                result.getInt(1),
+                result.getString(2));
+    }
+
+    /**
      * Récupère l'ensemble des unités de la BDD, trié par id croissant
      * @return la liste des unités inscrit dans la BDD
      * @throws SQLException erreur lors de la requête SQL

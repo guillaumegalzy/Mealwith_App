@@ -184,14 +184,15 @@ public class IngredientsController implements Initializable {
             // Suppression d'un ingredient à la base de données
             case "btnDelete":
                 // Récupération de l'ID du ingredient à supprimer
-                Ingredients ingredients = tab_ingredient.getSelectionModel().getSelectedItem();
+                Ingredients deletedIngredients = tab_ingredient.getSelectionModel().getSelectedItem();
 
                 // Le supprime de la BDD
-                IngredientsDAO repoIngredients = new IngredientsDAO();
-                repoIngredients.Delete(ingredients);
+                repoIngredients.Delete(deletedIngredients);
 
-                // Le supprime de l'observableList
-                listIngredients.remove(ingredients);
+                // Le supprime de la filteredList d'abord, puis de l'observableList et raffraichit l'affichage du tableau
+                listIngredientsFilter.remove(deletedIngredients);
+                listIngredients.remove(deletedIngredients);
+                tab_ingredient.refresh();
                 break;
 
             default:

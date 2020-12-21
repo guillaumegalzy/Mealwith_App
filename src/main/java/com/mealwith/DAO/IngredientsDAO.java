@@ -15,17 +15,26 @@ import java.util.List;
 public class IngredientsDAO{
     private final List<Ingredients> repoIngredients = FXCollections.observableArrayList();
 
-    public void Insert(Ingredients ingredients) {
+    public void Insert(Ingredients ingredients) throws SQLException {
         // Création de la requête d'ajout d'un utilisateur
-
+            PreparedStatement insertOne = DataHolder.getINSTANCE().getCon().prepareStatement("INSERT into ingredients (category_id,origin_id,unit_id,name,price,temp_min,temp_max,shelf_life,picture) values (?,?,?,?,?,?,?,?,?)");
 
         // Définit les paramètres pour la requête préparée
-
+            insertOne.setInt(1, ingredients.getCategory_id());
+            insertOne.setInt(2, ingredients.getOrigin_id());
+            insertOne.setInt(3, ingredients.getUnit_id());
+            insertOne.setString(4, ingredients.getName());
+            insertOne.setDouble(5, ingredients.getPrice());
+            insertOne.setInt(6, ingredients.getTemp_min());
+            insertOne.setInt(7, ingredients.getTemp_max());
+            insertOne.setInt(8, ingredients.getShelf_life());
+            insertOne.setString(9, ingredients.getPicture());
 
         // Exécute la requête d'ajout
-
+            insertOne.executeQuery();
 
         // Ferme la requête
+            insertOne.close();
     }
 
     public void Update(Ingredients ingredients) {
@@ -76,6 +85,44 @@ public class IngredientsDAO{
         );
     }
 
+    /**
+     * Récupère un ingredient spécifique en BDD via son ID
+     * @param ingredientName Nom de l'ingredient en BDD
+     * @return Ingredients
+     */
+    public Ingredients FindByName(String ingredientName) throws SQLException {
+        // Création de la requête de recherche de l'ensemble des ingredients
+            PreparedStatement findOne = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from ingredients WHERE name =?");
+
+        // Définit le critère de recherche pour la requête préparée
+            findOne.setString(1, ingredientName);
+
+        // Exécute la requête
+            ResultSet result = findOne.executeQuery();
+
+        // Ferme la requête
+            findOne.close();
+
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
+
+            result.first();
+
+            return new Ingredients(
+                    result.getInt(1),
+                    result.getInt(2),
+                    result.getInt(3),
+                    result.getInt(4),
+                    result.getString(5),
+                    result.getDouble(6),
+                    result.getInt(7),
+                    result.getInt(8),
+                    result.getInt(9),
+                    result.getString(10),
+                    new ImageView(new Image(result.getString(10)))
+            );
+    }
+
     public void Delete(Ingredients ingredients) throws SQLException {
         // Création de la requête de recherche de l'ensemble des ingredients
             PreparedStatement delOne = DataHolder.getINSTANCE().getCon().prepareStatement("DELETE from ingredients WHERE id =?");
@@ -89,8 +136,8 @@ public class IngredientsDAO{
         // Ferme la requête
             delOne.close();
 
-            // Clos la connection
-        DataHolder.getINSTANCE().getCon().close();
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
     }
 
     /**

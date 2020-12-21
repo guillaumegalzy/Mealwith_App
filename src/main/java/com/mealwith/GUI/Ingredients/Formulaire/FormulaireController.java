@@ -1,6 +1,7 @@
 package com.mealwith.GUI.Ingredients.Formulaire;
 
 import com.mealwith.DAO.CategoriesIngredientsDAO;
+import com.mealwith.DAO.IngredientsDAO;
 import com.mealwith.DAO.OriginDAO;
 import com.mealwith.DAO.UnitDAO;
 import com.mealwith.Entity.CategoriesIngredients;
@@ -8,6 +9,7 @@ import com.mealwith.Entity.Ingredients;
 import com.mealwith.Entity.Origin;
 import com.mealwith.Entity.Unit;
 import com.mealwith.GUI.Ingredients.IngredientsController;
+import com.mealwith.Service.AlertMessage;
 import com.mealwith.Service.CustomsFonts;
 import com.mealwith.Service.DataHolder;
 import javafx.collections.FXCollections;
@@ -46,9 +48,13 @@ public class FormulaireController implements Initializable {
     @FXML
     public Button btnAccept,btnCancel;
     @FXML
-    public ComboBox<String> comboUnit,comboOrigin,comboCategory;
+    public ComboBox<Unit> comboUnit;
     @FXML
-    public TextField inputPrice,inputTempMin,inputTempMax,inputName,inputID;
+    public ComboBox<CategoriesIngredients> comboCategory;
+    @FXML
+    public ComboBox<Origin> comboOrigin;
+    @FXML
+    public TextField inputPrice,inputTempMin,inputTempMax,inputName,inputID,inputShelflife;
     @FXML
     public Slider sliderTempMin,sliderTempMax;
 
@@ -59,13 +65,18 @@ public class FormulaireController implements Initializable {
     public static List<Object> dataSend = new ArrayList<>(); // Données envoyés par ce formulaire
     public List<Ingredients> listIngredients = new ArrayList<>(); // Ensemble des ingredients de la BDD
     public Ingredients ingredientSelected; // Ingredient émis par le formulaire de provenance
+    public String operation = null; // Opération demandée par le controlleur de provenance
+
     public OriginDAO repoOrigin = new OriginDAO();
-    public ObservableList<String> listOrigin = FXCollections.observableArrayList();
+    public ObservableList<Origin> listOrigin = FXCollections.observableArrayList();
     public UnitDAO repoUnit = new UnitDAO();
-    public ObservableList<String> listUnit = FXCollections.observableArrayList();
+    public ObservableList<Unit> listUnit = FXCollections.observableArrayList();
     public CategoriesIngredientsDAO repoCatIngr = new CategoriesIngredientsDAO();
-    public ObservableList<String> listCatIngr = FXCollections.observableArrayList();
+    public ObservableList<CategoriesIngredients> listCatIngr = FXCollections.observableArrayList();
     public List<FontIcon> starRatings = new ArrayList<>();
+    public AlertMessage alertMessage = new AlertMessage(); // Alerte utilisée pour informer l'utilisateur des actions effectuées en BDD
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -73,8 +84,6 @@ public class FormulaireController implements Initializable {
             textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
 
         // Vide les précédentes données récupérées et envoyées
-            dataReceive.clear();
-            ingredientSelected = null;
             dataSend.clear();
 
         // Ajout gestionnaire d'écoute sur le logo pour renvoyer au menu
@@ -102,22 +111,17 @@ public class FormulaireController implements Initializable {
         // Remplissage des combobox
             try {
                 // Récupération des origines présentes dans la BDD et ajout dans la combobox
-                    for (Origin origin: repoOrigin.List()) {
-                        listOrigin.add(origin.getCountry());
-                    }
-                    comboOrigin.setItems(listOrigin);
+                   listOrigin.addAll(repoOrigin.List());
+                   comboOrigin.setItems(listOrigin);
 
                 // Récupération des unités présentes dans la BDD et ajout dans la combobox
-                    for (Unit unit: repoUnit.List()) {
-                        listUnit.add(unit.getType());
-                    }
+                    listUnit.addAll(repoUnit.List());
                     comboUnit.setItems(listUnit);
 
                 // Récupération des catégories d'ingrédients présentes dans la BDD et ajout dans la combobox
-                    for (CategoriesIngredients catIngr: repoCatIngr.List()) {
-                        listCatIngr.add(catIngr.getName());
-                    }
+                    listCatIngr.addAll(repoCatIngr.List());
                     comboCategory.setItems(listCatIngr);
+
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -127,9 +131,9 @@ public class FormulaireController implements Initializable {
             // Récupération des données stockées par le controlleur de provenance
                 getData();
             // Chargement des valeurs dans les champs si nécessaire
-                loadPage(dataReceive.get(0).toString());
+                loadPage();
             // Débloque les saisies, si nécessaire
-                unlockField(dataReceive.get(0).toString());
+                unlockField();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -139,17 +143,22 @@ public class FormulaireController implements Initializable {
      * Récupère les datas stockées par le controlleur principal et remplis les champs s'il s'agit d'une modification ou d'un détail
      */
     public void getData()  {
+        // Réinitialisation des données stockées
+            dataReceive.clear();
+            ingredientSelected = null;
+            operation = null;
+
         // Récupération des informations émises par le formulaire de provenance
             dataReceive.addAll(IngredientsController.dataSend);
+            operation = (String) IngredientsController.dataSend.get(0); // Opération demandée "Modify","Add" ou "Details". Donnée émise par le controlleur de provenance
             listIngredients.addAll((Collection<? extends Ingredients>) IngredientsController.dataSend.get(1));
     }
 
     /**
      * Fonction récupérant toute les informations nécessaire en cas de modification ou de visualisation d'un ingredient
-     * @param operation Opération demandée "Modify","Add" ou "Details". Donnée émise par le controlleur de provenance
      * @throws SQLException Exception possible liée à l'usage de la BDD
      */
-    public void loadPage(String operation) throws SQLException{
+    public void loadPage() throws SQLException{
 
         // S'il s'agit d'une modification ou d'un détails
         if(operation.equals("Modify") || operation.equals("Details")){
@@ -159,14 +168,15 @@ public class FormulaireController implements Initializable {
             this.inputID.setText(String.valueOf(ingredientSelected.getId()));
             this.inputName.setText(ingredientSelected.getName());
             this.inputPrice.setText(String.valueOf(ingredientSelected.getPrice()));
+            this.inputShelflife.setText(String.valueOf(ingredientSelected.getShelf_life()));
             this.inputTempMin.setText(String.valueOf(ingredientSelected.getTemp_min()));
             this.sliderTempMin.setValue(ingredientSelected.getTemp_min());
             this.inputTempMax.setText(String.valueOf(ingredientSelected.getTemp_max()));
             this.sliderTempMax.setValue(ingredientSelected.getTemp_max());
             this.ImgIngredient.setImage(new Image(ingredientSelected.getPicture()));
-            this.comboCategory.getSelectionModel().select(ingredientSelected.getCategory_name());
-            this.comboUnit.getSelectionModel().select(ingredientSelected.getUnit_name());
-            this.comboOrigin.getSelectionModel().select(ingredientSelected.getOrigin_name());
+            this.comboCategory.getSelectionModel().select(repoCatIngr.FindByID(ingredientSelected.getCategory_id()));
+            this.comboUnit.getSelectionModel().select(repoUnit.FindByID(ingredientSelected.getUnit_id()));
+            this.comboOrigin.getSelectionModel().select(repoOrigin.FindByID(ingredientSelected.getOrigin_id()));
             this.RatingHBox.setVisible(true);
             for (FontIcon starIcon: starRatings) {
                 starIcon.setIconColor(Color.rgb(255,225,77));
@@ -176,9 +186,8 @@ public class FormulaireController implements Initializable {
 
     /**
      * Rend éditable l'ensemble des champs et ajout du gestionnaire d'écoute sur l'image pour pouvoir la changer
-      * @param operation Opération demandée "Modify","Add" ou "Details". Donnée émise par le controlleur de provenance
      */
-    public void unlockField(String operation) {
+    public void unlockField() {
         // S'il s'agit d'une modification exclusivement
         if (operation.equals("Modify") || operation.equals("Add")) {
 
@@ -186,6 +195,7 @@ public class FormulaireController implements Initializable {
             this.inputID.setDisable(true);
             this.inputName.setEditable(true);
             this.inputPrice.setEditable(true);
+            this.inputShelflife.setEditable(true);
             this.inputTempMin.setEditable(true);
             this.inputTempMax.setEditable(true);
             this.sliderTempMin.setDisable(false);
@@ -233,19 +243,56 @@ public class FormulaireController implements Initializable {
         }
     }
 
-    public void btnClick(ActionEvent actionEvent) {
+    public void btnClick(ActionEvent actionEvent) throws SQLException {
         // Récupère l'ID du bouton dans une string
-            String btnText = ((Button)actionEvent.getSource()).getId();
+        String btnText = ((Button) actionEvent.getSource()).getId();
 
         //Action différente selon le boutton
-            /*if (btnText.equals("btnAccept")){
+        if (btnText.equals("btnAccept")) {
+
+            if (Verify()) { // Si la vérification est effective
                 // Ajout d'un ingredient à la base de données
+                IngredientsDAO repoIngredients = new IngredientsDAO();
 
-            }*/
+                Ingredients ingredientInsert = new Ingredients(
+                    this.comboCategory.getSelectionModel().getSelectedItem().getId(),
+                    this.comboOrigin.getSelectionModel().getSelectedItem().getId(),
+                    this.comboUnit.getSelectionModel().getSelectedItem().getId(),
+                    this.inputName.getText(),
+                    Double.parseDouble(this.inputPrice.getText()),
+                    Integer.parseInt(this.inputTempMin.getText()),
+                    Integer.parseInt(this.inputTempMax.getText()),
+                    Integer.parseInt(this.inputShelflife.getText()),
+                    this.ImgIngredient.getImage().getUrl()
+                );
+                repoIngredients.Insert(ingredientInsert);
 
-        // Retourne également le repo des ingredients pour ne pas le fetch de nouveau
+                // Message de confirmation
+                    alertMessage.Alert(Alert.AlertType.INFORMATION, "Ingredient : '" + this.inputName.getText() + "' added to DB.", ButtonType.CLOSE);
+
+                // Ajout dans la liste des ingrédients
+                    ingredientInsert.setId(repoIngredients.FindByName(ingredientInsert.getName()).getId());
+                    listIngredients.add(repoIngredients.FindByName(ingredientInsert.getName()));
+
+                // Retourne également le repo des ingredients pour ne pas le fetch de nouveau
+                    dataSend.add(listIngredients);
+
+                // Redirection vers le formulaire 'Ingredients'
+                    DataHolder.getINSTANCE().ChangeScene((Stage) btnAccept.getScene().getWindow(), "Ingredients", "Ingredients");
+            } else {
+                alertMessage.Alert(Alert.AlertType.ERROR, "Error when trying to insert ingredient to db", ButtonType.CLOSE);
+            }
+        }
+
+        if (btnText.equals("btnCancel")) {
+            // Retourne également le repo des ingredients pour ne pas le fetch de nouveau
             dataSend.add(listIngredients);
-        // Redirection vers le formulaire 'Ingredients'
-            DataHolder.getINSTANCE().ChangeScene((Stage) btnAccept.getScene().getWindow(),"Ingredients","Ingredients");
+            // Redirection vers le formulaire 'Ingredients'
+            DataHolder.getINSTANCE().ChangeScene((Stage) btnAccept.getScene().getWindow(), "Ingredients", "Ingredients");
+        }
+    }
+
+    private boolean Verify() {
+        return true;
     }
 }

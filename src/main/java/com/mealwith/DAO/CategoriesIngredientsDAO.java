@@ -67,6 +67,35 @@ public class CategoriesIngredientsDAO{
     }
 
     /**
+     * Trouve la catégorie d'ingrédient portant un ID spécifique
+     * @param id ID de la catégorie à récupérer
+     * @return Catégorie d'ingrédient
+     * @throws SQLException Exception possible liée à l'usage de la BDD
+     */
+    public CategoriesIngredients FindByID(int id) throws SQLException {
+        // Création de la requête de recherche de l'ensemble des pays
+        PreparedStatement findCatIngByID = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from ingredient_category WHERE id=?");
+
+        // Définit le critère de recherche pour la requête préparée
+        findCatIngByID.setInt(1,id);
+
+        // Exécute la requête
+        ResultSet result = findCatIngByID.executeQuery();
+
+        result.first();
+
+        // Ferme la requête
+        findCatIngByID.close();
+
+        // Clos la connection
+        DataHolder.getINSTANCE().getCon().close();
+
+        return new CategoriesIngredients(
+                result.getInt(1),
+                result.getString(2));
+    }
+
+    /**
      * Récupère l'ensemble des users de la BDD, trié par id croissant
      * @return une list de user
      * @throws SQLException Exception possible liée à l'usage de la BDD

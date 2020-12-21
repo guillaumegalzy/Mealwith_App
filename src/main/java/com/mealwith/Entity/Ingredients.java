@@ -52,6 +52,18 @@ public class Ingredients {
         this.picture_Img.setPreserveRatio(true);
     }
 
+    public Ingredients(int category_id, int origin_id, int unit_id, String name, double price, int temp_min, int temp_max, int shelf_life, String picture){
+        this.category_id = category_id;
+        this.origin_id = origin_id;
+        this.unit_id = unit_id;
+        this.name = name;
+        this.price = price;
+        this.temp_min = temp_min;
+        this.temp_max = temp_max;
+        this.shelf_life = shelf_life;
+        this.picture = picture;
+    }
+
     public String getCategory_name() {
         return category_name;
     }
