@@ -47,10 +47,10 @@ public class FormulaireController implements Initializable {
     private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
     public Text textLogo; // Logotype
 
-    public static List<Object> dataReceive = new ArrayList<>(); // Stockage des données récupérées du controlleur de provenance
     public static List<Object> dataSend = new ArrayList<>(); // Données envoyés par ce formulaire
+    public static Recipes recipeSelected ; // Recette émises par le formulaire de provenance
+    public List<Recipes> listRecipes = new ArrayList<>(); // Ensemble des recettes de la BDD
     public List<FontIcon> starRatings = new ArrayList<>();
-    public List<Recipes> listRecipes = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -58,7 +58,8 @@ public class FormulaireController implements Initializable {
             textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
 
         // Vide les précédentes données récupérées et envoyées
-            dataReceive.clear();
+            recipeSelected = null;
+            listRecipes.clear();
             dataSend.clear();
 
         // Ajout gestionnaire d'écoute sur le logo pour renvoyer au menu
@@ -88,8 +89,8 @@ public class FormulaireController implements Initializable {
      * Récupère les datas stockées par le controlleur principal et remplis les champs s'il s'agit d'une modification ou d'un détail
      */
     public void getData()  {
-        // Récupération de la stage principale à partir du tableau
-            dataReceive.addAll(RecipesController.dataSend);
+        // Récupération des informations émises par le formulaire de provenance
+            recipeSelected = (Recipes) RecipesController.dataSend.get(0);
             listRecipes.addAll((Collection<? extends Recipes>) RecipesController.dataSend.get(1));
     }
 
@@ -99,7 +100,6 @@ public class FormulaireController implements Initializable {
      */
     public void loadPage() throws SQLException{
          //Remplissage des champs avec les informations de la recette
-            Recipes recipeSelected = listRecipes.get((Integer) dataReceive.get(0));
             this.inputID.setText(String.valueOf(recipeSelected.getId()));
             this.inputName.setText(recipeSelected.getName());
             this.ImgRecipe.setImage(new Image(recipeSelected.getPicture()));
@@ -108,19 +108,19 @@ public class FormulaireController implements Initializable {
                 starIcon.setIconColor(Color.rgb(255,225,77));
             }
 
+        //Remplissage des ingredient
+            recipeSelected.setIngredientInRecipe(); // Récupère les ingrédients de cette recette dans la BDD
+
         for (Ingredients ingredient: recipeSelected.getIngredientInRecipe()) {
             HBox hbox = new HBox();
             hbox.setSpacing(30);
             hbox.setStyle("-fx-alignment: center-left");
 
-            Label ingredientID = new Label();
-            ingredientID.setText("ID : " + ingredient.getId());
+            Label ingredientID = new Label("ID : " + ingredient.getId());
             ingredientID.setStyle("-fx-font-weight: bold");
 
-            Label ingredientName = new Label();
-            ingredientName.setText(ingredient.getName());
+            Label ingredientName = new Label(ingredient.getName());
 
-            Image img;
             ImageView imageView = ingredient.getPicture_Img();
 
             hbox.getChildren().addAll(ingredientID,ingredientName,imageView);

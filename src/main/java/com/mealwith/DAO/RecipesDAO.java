@@ -28,19 +28,15 @@ public class RecipesDAO {
         // Exécute la requête et récupération du résultat
             ResultSet resultRecipes = listAll.executeQuery("SELECT * from recipes ORDER BY id");
 
-
         while(resultRecipes.next()){
-
-
             // Ajoute l'ingrédient dans le repo
                 repoRecipes.add(new Recipes(
                         resultRecipes.getInt(1),
                         resultRecipes.getInt(2),
                         resultRecipes.getString(4),
                         resultRecipes.getString(5),
-                        new ImageView(new Image(resultRecipes.getString(5))),
-                        ListIngredientsInRecipes(resultRecipes.getInt(1)))
-                        );
+                        new ImageView(new Image(resultRecipes.getString(5)))
+                        ));
         }
 
         // Ferme la requête

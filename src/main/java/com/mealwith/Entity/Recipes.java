@@ -1,6 +1,7 @@
 package com.mealwith.Entity;
 
 import com.mealwith.DAO.CategoriesRecipesDAO;
+import com.mealwith.DAO.RecipesDAO;
 import javafx.scene.image.ImageView;
 
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ public class Recipes {
     private ImageView picture_Img;
     private List<Ingredients> ingredientInRecipe;
 
-    public Recipes(int id, int category_id, String name, String picture, ImageView picture_Img,List<Ingredients> ingredientInRecipe) throws SQLException {
+    public Recipes(int id, int category_id, String name, String picture, ImageView picture_Img) throws SQLException {
 
         this.id = id;
 
@@ -30,8 +31,11 @@ public class Recipes {
         this.picture_Img.setFitWidth(100);
         this.picture_Img.setFitHeight(100);
         this.picture_Img.setPreserveRatio(true);
+    }
 
-        this.ingredientInRecipe = ingredientInRecipe;
+    public void setIngredientInRecipe() throws SQLException {
+        RecipesDAO recipesDAO = new RecipesDAO();
+        this.ingredientInRecipe = recipesDAO.ListIngredientsInRecipes(this.id);
     }
 
     public List<Ingredients> getIngredientInRecipe() {

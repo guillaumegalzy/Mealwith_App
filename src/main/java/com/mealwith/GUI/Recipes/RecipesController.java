@@ -116,7 +116,7 @@ public class RecipesController implements Initializable {
             alert.Alert(AlertType.WARNING,"Please select a recipe before.",ButtonType.CLOSE);
         } else {
             // Informe le controlleur du formulaire que l'on veut effectuer un ajout
-                dataSend.add(tab_recipes.getSelectionModel().getSelectedIndex()); //Stockage de la recette concernée
+                dataSend.add(tab_recipes.getSelectionModel().getSelectedItem()); //Stockage de la recette concernée
                 dataSend.add(listRecipes); //Stockage de l'ensemble des recettes
 
             // Redirection vers le formulaire d'ajout
