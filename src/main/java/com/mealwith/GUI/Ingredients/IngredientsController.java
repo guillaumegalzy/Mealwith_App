@@ -5,6 +5,9 @@ import com.mealwith.Entity.Ingredients;
 import com.mealwith.Service.AlertMessage;
 import com.mealwith.Service.CustomsFonts;
 import com.mealwith.Service.DataHolder;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -26,6 +29,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class IngredientsController implements Initializable {
     @FXML
@@ -48,6 +52,8 @@ public class IngredientsController implements Initializable {
     public Label catAll, catMeat, catFruits, catDairy, catGro;
     @FXML
     public FontIcon iconDelete, iconAdd, iconModify, iconDetails, iconTri, catAllIcon, catMeatIcon, catFruitsIcon, catDairyIcon, catGroIcon;
+    @FXML
+    public TextField inputSearch;
 
     private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
     public Text textLogo; // Logotype
@@ -57,6 +63,12 @@ public class IngredientsController implements Initializable {
     public Map<Label, FontIcon> catFilter = new HashMap<>(); // Map associant les noms des catérogies dans le menu de gauche avec leur icône respective
     public IngredientsDAO repoIngredients = new IngredientsDAO();
     public AlertMessage alert = new AlertMessage();
+    public FilteredList<Ingredients> listIngredientsFilter = new FilteredList<>(FXCollections.observableList(listIngredients)); // Liste des ingredients filtrée par catégorie ou texte de la search bar
+    public ObjectProperty<Predicate<Ingredients>> categoryNameFilter = new SimpleObjectProperty<>(); // Filtre sur la catégorie sélectionnée dans le menu de gauche
+    public ObjectProperty<Predicate<Ingredients>> searchTextFilter = new SimpleObjectProperty<>(); // Filtre sur le texte de la barre de recherche
+    public String categoryName = ""; // Reccueil la catégorie sélectionnée
+    public String searchText = "";  // Reccueil le texte saisit dans l'input de recherche
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -71,6 +83,23 @@ public class IngredientsController implements Initializable {
 
         // Gestionnaire d'écoute sur le logo pour renvoyer au menu
             Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(), Home.getId(), Home.getId()));
+
+        // Création des filtres qui pourront être utilisé par le tableview
+            // Filtre pour la catégorie
+            categoryNameFilter.bind(Bindings.createObjectBinding(() ->
+                    ingredients -> ingredients.getCategory_name().equals(categoryName)
+            ));
+
+            // Filtre pour la barre de recherche
+            searchTextFilter.bind(Bindings.createObjectBinding(() ->
+                    ingredients -> ingredients.getName().toLowerCase().contains(searchText.toLowerCase())
+            ));
+
+        // Gestionnaire d'écoute sur l'input de recherche
+            inputSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+                searchText = newValue; //Stocke le texte de la barre de recherche
+                searchRecipe();
+            });
 
         // Récupération des ingrédients dans la BDD
             try {
@@ -159,27 +188,57 @@ public class IngredientsController implements Initializable {
 
     /**
      * Change  l'aspect visuelle de la catégorie sélectionnée en tant que filtre
-     *
      * @param event Evenement déclenchant l'action
      */
     public void MenuClick(Event event) {
         Label choiceLabel = (Label) event.getSource();
-        String categoryName = choiceLabel.getText();
+        categoryName = choiceLabel.getText(); // Stocke la catégorie cliquée
         String labelID = choiceLabel.getId();
+
         for (Map.Entry<Label, FontIcon> element : catFilter.entrySet()) {
-            if (element.getKey().getId().equals(labelID)) {
-                element.getValue().setVisible(true);
-                element.getKey().setStyle("-fx-font-weight: bold");
-                if (!categoryName.equals("All")) {
-                    FilteredList<Ingredients> listIngredientFilter = listIngredients.filtered(ingredients -> ingredients.getCategory_name().equals(categoryName));
-                    tab_ingredient.setItems(listIngredientFilter);
-                } else{
-                    tab_ingredient.setItems(listIngredients);
+            // Change le style et affiche l'icone du menu sélectionné
+                if (element.getKey().getId().equals(labelID)) {
+                    element.getValue().setVisible(true);
+                    element.getKey().setStyle("-fx-font-weight: bold");
+
+                    // Filtre les données du tableau
+                    if (categoryName.equals("All")) {categoryName = "";} // Réinitialisation du texte de la catégorie stockée
+                    searchRecipe(); // Filtre les recettes affichées selon leur catégorie
+
+                } else {
+                    element.getValue().setVisible(false);
+                    element.getKey().setStyle("");
                 }
-            } else {
-                element.getValue().setVisible(false);
-                element.getKey().setStyle("");
-            }
         }
     }
+
+    /**
+     * Fonction permettrant de filtrer la liste des recettes en utilisant le texte saisit dans l'input de recherche ou la catégorie sélectionnée dans le menu de gauche
+     */
+        public void searchRecipe() {
+            // Utilise la liste filtrée en tant que jeu de données pour le tableau
+            tab_ingredient.setItems(listIngredientsFilter);
+
+            if (!searchText.isBlank() && !categoryName.isBlank()){ // Si une catégorie sélectionnée et un texte saisit
+                if (!categoryName.equals("All")){
+                    // Applique un filtre à la liste grâce aux deux filtres paramétrés
+                    listIngredientsFilter.predicateProperty().bind(Bindings.createObjectBinding(()->
+                            categoryNameFilter.get().and(searchTextFilter.get()),categoryNameFilter,searchTextFilter));
+                }
+
+            }else if (!searchText.isBlank()){ // Si seulement du texte saisit dans la barre de recherche {
+                // Applique un filtre à la liste exclusivement selon le texte de la barre de recherche
+                listIngredientsFilter.predicateProperty().bind(Bindings.createObjectBinding(()->
+                        searchTextFilter.get()));
+
+            }else if (!categoryName.isBlank() && !categoryName.equals("All")) { // Si seulement une catégorie sélectionnée
+                // Filtre la liste exclusivement selon la catégorie sélectionnée
+                listIngredientsFilter.predicateProperty().bind(Bindings.createObjectBinding(()->
+                        categoryNameFilter.get()));
+
+            } else{
+                // Aucun filtre employé, réutilisation de l'ensemble du jeu de données
+                tab_ingredient.setItems(listIngredients);
+            }
+        }
 }

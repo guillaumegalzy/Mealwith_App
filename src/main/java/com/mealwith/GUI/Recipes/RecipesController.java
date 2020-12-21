@@ -162,7 +162,6 @@ public class RecipesController implements Initializable {
 
     /**
      * Change  l'aspect visuelle de la catégorie sélectionnée en tant que filtre
-     *
      * @param event Evenement déclenchant l'action
      */
     public void MenuClick(Event event) {
@@ -176,9 +175,9 @@ public class RecipesController implements Initializable {
                     element.getValue().setVisible(true);
                     element.getKey().setStyle("-fx-font-weight: bold");
 
-                        // Filtre les données du tableau
-                        if (categoryName.equals("All")) {categoryName = "";} // Réinitialisation du texte de la catégorie stockée
-                        searchRecipe(); // Filtre les recettes affichées selon leur catégorie
+                    // Filtre les données du tableau
+                    if (categoryName.equals("All")) {categoryName = "";} // Réinitialisation du texte de la catégorie stockée
+                    searchRecipe(); // Filtre les recettes affichées selon leur catégorie
 
                 } else {
                     element.getValue().setVisible(false);
