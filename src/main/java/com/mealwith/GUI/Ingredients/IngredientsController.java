@@ -2,6 +2,7 @@ package com.mealwith.GUI.Ingredients;
 
 import com.mealwith.DAO.IngredientsDAO;
 import com.mealwith.Entity.Ingredients;
+import com.mealwith.GUI.Ingredients.Formulaire.FormulaireController;
 import com.mealwith.Service.AlertMessage;
 import com.mealwith.Service.CustomsFonts;
 import com.mealwith.Service.DataHolder;
@@ -60,6 +61,7 @@ public class IngredientsController implements Initializable {
 
     public ObservableList<Ingredients> listIngredients = FXCollections.observableArrayList();
     public static List<Object> dataSend = new ArrayList<>(); // Données qui seront stockées par ce controlleur et utilisé par le controlleur de destination
+    public static List<Object> dataReceive = new ArrayList<>(); // Stockage des données récupérées du controlleur de provenance
     public Map<Label, FontIcon> catFilter = new HashMap<>(); // Map associant les noms des catérogies dans le menu de gauche avec leur icône respective
     public IngredientsDAO repoIngredients = new IngredientsDAO();
     public AlertMessage alert = new AlertMessage();
@@ -69,13 +71,13 @@ public class IngredientsController implements Initializable {
     public String categoryName = ""; // Reccueil la catégorie sélectionnée
     public String searchText = "";  // Reccueil le texte saisit dans l'input de recherche
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Changement de la font du Logo
             textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
 
-        // Vide les données envoyées
+        // Vide les précédentes données récupérées et envoyées
+            dataReceive.clear();
             dataSend.clear();
 
         // Récupération des images
@@ -101,20 +103,28 @@ public class IngredientsController implements Initializable {
                 searchRecipe();
             });
 
-        // Récupération des ingrédients dans la BDD
-            try {
-                listIngredients.addAll(repoIngredients.List());
-                // Lie le membre approprié de chaque ingrédients à la colonne du tableau
-                column_ID.setCellValueFactory(new PropertyValueFactory<>("id"));
-                column_ingredient.setCellValueFactory(new PropertyValueFactory<>("name"));
-                column_category.setCellValueFactory(new PropertyValueFactory<>("category_name"));
-                column_picture.setCellValueFactory(new PropertyValueFactory<>("picture_Img"));
+        // Récupération des données stockées par le formulaire
+            getData();
 
-                // Ajout les éléments du repo en tant que données du tableau
-                tab_ingredient.setItems(listIngredients);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+        // Récupération des ingrédients dans la BDD ou via le controlleur de provenance
+            if (!dataReceive.isEmpty()) {
+                listIngredients.addAll((Collection<? extends Ingredients>) dataReceive.get(0));
+            }else{
+                try {
+                    listIngredients.addAll(repoIngredients.List());
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
+
+        // Lie le membre approprié de chaque ingrédients à la colonne du tableau
+            column_ID.setCellValueFactory(new PropertyValueFactory<>("id"));
+            column_ingredient.setCellValueFactory(new PropertyValueFactory<>("name"));
+            column_category.setCellValueFactory(new PropertyValueFactory<>("category_name"));
+            column_picture.setCellValueFactory(new PropertyValueFactory<>("picture_Img"));
+
+        // Ajout les éléments du repo en tant que données du tableau
+            tab_ingredient.setItems(listIngredients);
 
         // Stocke les labels et leur icône respective dans la Map 'catFilter
             catFilter.put(catAll, catAllIcon);
@@ -141,6 +151,7 @@ public class IngredientsController implements Initializable {
                 } else {
                     // Informe le controlleur du formulaire que l'on veut effectuer un ajout
                     dataSend.add("Details"); //Stockage de l'opération demandée
+                    dataSend.add(listIngredients); //Stockage de l'ensemble des ingredients
                     dataSend.add(tab_ingredient.getSelectionModel().getSelectedItem()); //Stockage du ingredient concerné
                     // Redirection vers le formulaire d'ajout
                     DataHolder.getINSTANCE().ChangeScene((Stage) btnAdd.getScene().getWindow(), "Ingredients/Formulaire", "Formulaire");
@@ -151,6 +162,7 @@ public class IngredientsController implements Initializable {
             case "btnAdd":
                 // Informe le controlleur du formulaire que l'on veut effectuer un ajout
                 dataSend.add("Add"); //Stockage de l'opération demandée
+                dataSend.add(listIngredients); //Stockage de l'ensemble des ingredients
                 // Redirection vers le formulaire d'ajout
                 DataHolder.getINSTANCE().ChangeScene((Stage) btnAdd.getScene().getWindow(), "Ingredients/Formulaire", "Formulaire");
                 break;
@@ -162,6 +174,7 @@ public class IngredientsController implements Initializable {
                 } else {
                     // Informe le controlleur du formulaire que l'on veut effectuer une modification
                     dataSend.add("Modify"); //Stockage de l'opération demandée
+                    dataSend.add(listIngredients); //Stockage de l'ensemble des ingredients
                     dataSend.add(tab_ingredient.getSelectionModel().getSelectedItem()); //Stockage du ingredient concerné
                     // Redirection vers le formulaire de modification
                     DataHolder.getINSTANCE().ChangeScene((Stage) btnAdd.getScene().getWindow(), "Ingredients/Formulaire", "Formulaire");
@@ -184,6 +197,13 @@ public class IngredientsController implements Initializable {
             default:
                 break;
         }
+    }
+
+    /**
+     * Récupère les datas stockées par le formulaire d'ingredients
+     */
+    public void getData()  {
+        dataReceive.addAll(FormulaireController.dataSend);
     }
 
     /**

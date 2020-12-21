@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -55,6 +56,9 @@ public class FormulaireController implements Initializable {
     public Text textLogo; // Logotype
 
     public List<Object> dataReceive = new ArrayList<>(); // Stockage des données récupérées du controlleur de provenance
+    public static List<Object> dataSend = new ArrayList<>(); // Données envoyés par ce formulaire
+    public List<Ingredients> listIngredients = new ArrayList<>(); // Ensemble des ingredients de la BDD
+    public Ingredients ingredientSelected; // Ingredient émis par le formulaire de provenance
     public OriginDAO repoOrigin = new OriginDAO();
     public ObservableList<String> listOrigin = FXCollections.observableArrayList();
     public UnitDAO repoUnit = new UnitDAO();
@@ -68,8 +72,10 @@ public class FormulaireController implements Initializable {
         // Changement de la font du Logo
             textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
 
-        // Vide les précédentes données récupérées
+        // Vide les précédentes données récupérées et envoyées
             dataReceive.clear();
+            ingredientSelected = null;
+            dataSend.clear();
 
         // Ajout gestionnaire d'écoute sur le logo pour renvoyer au menu
             Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(),Home.getId(),Home.getId()));
@@ -133,8 +139,9 @@ public class FormulaireController implements Initializable {
      * Récupère les datas stockées par le controlleur principal et remplis les champs s'il s'agit d'une modification ou d'un détail
      */
     public void getData()  {
-        // Récupération de la stage principale à partir du tableau
+        // Récupération des informations émises par le formulaire de provenance
             dataReceive.addAll(IngredientsController.dataSend);
+            listIngredients.addAll((Collection<? extends Ingredients>) IngredientsController.dataSend.get(1));
     }
 
     /**
@@ -148,18 +155,18 @@ public class FormulaireController implements Initializable {
         if(operation.equals("Modify") || operation.equals("Details")){
 
             // Remplissage des champs avec les informations du disque
-            Ingredients ingredients = (Ingredients) this.dataReceive.get(1);
-            this.inputID.setText(String.valueOf(ingredients.getId()));
-            this.inputName.setText(ingredients.getName());
-            this.inputPrice.setText(String.valueOf(ingredients.getPrice()));
-            this.inputTempMin.setText(String.valueOf(ingredients.getTemp_min()));
-            this.sliderTempMin.setValue(ingredients.getTemp_min());
-            this.inputTempMax.setText(String.valueOf(ingredients.getTemp_max()));
-            this.sliderTempMax.setValue(ingredients.getTemp_max());
-            this.ImgIngredient.setImage(new Image(ingredients.getPicture()));
-            this.comboCategory.getSelectionModel().select(ingredients.getCategory_name());
-            this.comboUnit.getSelectionModel().select(ingredients.getUnit_name());
-            this.comboOrigin.getSelectionModel().select(ingredients.getOrigin_name());
+            ingredientSelected = (Ingredients) dataReceive.get(2);
+            this.inputID.setText(String.valueOf(ingredientSelected.getId()));
+            this.inputName.setText(ingredientSelected.getName());
+            this.inputPrice.setText(String.valueOf(ingredientSelected.getPrice()));
+            this.inputTempMin.setText(String.valueOf(ingredientSelected.getTemp_min()));
+            this.sliderTempMin.setValue(ingredientSelected.getTemp_min());
+            this.inputTempMax.setText(String.valueOf(ingredientSelected.getTemp_max()));
+            this.sliderTempMax.setValue(ingredientSelected.getTemp_max());
+            this.ImgIngredient.setImage(new Image(ingredientSelected.getPicture()));
+            this.comboCategory.getSelectionModel().select(ingredientSelected.getCategory_name());
+            this.comboUnit.getSelectionModel().select(ingredientSelected.getUnit_name());
+            this.comboOrigin.getSelectionModel().select(ingredientSelected.getOrigin_name());
             this.RatingHBox.setVisible(true);
             for (FontIcon starIcon: starRatings) {
                 starIcon.setIconColor(Color.rgb(255,225,77));
@@ -236,6 +243,8 @@ public class FormulaireController implements Initializable {
 
             }*/
 
+        // Retourne également le repo des ingredients pour ne pas le fetch de nouveau
+            dataSend.add(listIngredients);
         // Redirection vers le formulaire 'Ingredients'
             DataHolder.getINSTANCE().ChangeScene((Stage) btnAccept.getScene().getWindow(),"Ingredients","Ingredients");
     }

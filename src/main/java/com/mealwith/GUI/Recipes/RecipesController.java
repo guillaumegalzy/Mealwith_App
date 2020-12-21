@@ -55,10 +55,10 @@ public class RecipesController implements Initializable {
     public FontIcon iconTri, catAllIcon, catBreakIcon, catDessIcon, catMainIcon, catSideIcon,catSoupIcon,catSnackIcon;
     @FXML
     public TextField inputSearch;
-    @FXML
-    public Text textLogo; // Logotype
 
     private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
+    public Text textLogo; // Logotype
+
     public ObservableList<Recipes> listRecipes = FXCollections.observableArrayList();
     public static List<Object> dataSend = new ArrayList<>(); // Données qui seront stockées par ce controlleur et utilisé par le controlleur de destination
     public static List<Object> dataReceive = new ArrayList<>(); // Stockage des données récupérées du controlleur de provenance
@@ -74,17 +74,17 @@ public class RecipesController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Changement de la font du Logo
-        textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
+            textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
 
         // Vide les précédentes données récupérées et envoyées
             dataReceive.clear();
             dataSend.clear();
 
         // Récupération des images
-        ImgLogo.setImage(new Image("img/Logo Mealwith.png"));
+            ImgLogo.setImage(new Image("img/Logo Mealwith.png"));
 
         // Gestionnaire d'écoute sur le logo pour renvoyer au menu
-        Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(), Home.getId(), Home.getId()));
+            Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(), Home.getId(), Home.getId()));
 
         // Création des filtres qui pourront être utilisé par le tableview
             // Filtre pour la catégorie
@@ -107,24 +107,25 @@ public class RecipesController implements Initializable {
         // Récupération des données stockées par le formulaire
             getData();
 
-        // Récupération des ingrédients dans la BDD
-        if (!dataReceive.isEmpty()){
-                listRecipes.addAll((Collection<? extends Recipes>) dataReceive.get(0));
-        }else{
-            try {
-                listRecipes.addAll(repoRecipes.List());
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+        // Récupération des ingrédients dans la BDD ou via le controlleur de provenance
+            if (!dataReceive.isEmpty()){
+                    listRecipes.addAll((Collection<? extends Recipes>) dataReceive.get(0));
+            }else{
+                try {
+                    listRecipes.addAll(repoRecipes.List());
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
-        }
-            // Lie le membre approprié de chaque ingrédients à la colonne du tableau
-                column_ID.setCellValueFactory(new PropertyValueFactory<>("id"));
-                column_name.setCellValueFactory(new PropertyValueFactory<>("name"));
-                column_category.setCellValueFactory(new PropertyValueFactory<>("category_name"));
-                column_picture.setCellValueFactory(new PropertyValueFactory<>("picture_Img"));
 
-            // Ajout les éléments du repo en tant que données du tableau
-                tab_recipes.setItems(listRecipes);
+        // Lie le membre approprié de chaque ingrédients à la colonne du tableau
+            column_ID.setCellValueFactory(new PropertyValueFactory<>("id"));
+            column_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+            column_category.setCellValueFactory(new PropertyValueFactory<>("category_name"));
+            column_picture.setCellValueFactory(new PropertyValueFactory<>("picture_Img"));
+
+        // Ajout les éléments du repo en tant que données du tableau
+            tab_recipes.setItems(listRecipes);
 
         // Stocke les labels et leur icône respective dans la Map 'catFilter'
             catFilter.put(catAll, catAllIcon);
