@@ -17,6 +17,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     implementation 'org.mariadb.jdbc:mariadb-java-client:2.1.2' //JDBC MariaDB
+    implementation 'org.controlsfx:controlsfx:11.0.3' // ControlFX, JavaFX enhancement
     implementation 'org.kordamp.ikonli:ikonli-javafx:11.5.0' // Font Awesome Icon
     implementation 'org.kordamp.ikonli:ikonli-fontawesome-pack:11.5.0' // Font Awesome Icon (Legacy)
     implementation 'org.kordamp.ikonli:ikonli-fontawesome5-pack:11.5.0' // Font Awesome Icon (Latest)

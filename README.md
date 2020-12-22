@@ -20,7 +20,7 @@ Librairies utilisées :
 
 
 | Nom                  | Version | Lien | Usage  |
-| -------------        |:---:    | :---:|:-----: |
+| -------------        |:---:    | :---:|----- |
 | Ikonli       |  11.5.0  |  [lien](https://https://github.com/kordamp/ikonli)    |  Permet l'utilisation de bibliothèque d'icône. Celle utilisée ici est Font Awesome.      |
-|                      |         |      |        |
+| ControlsFX   |  11.0.3  |  [lien](https://github.com/controlsfx/controlsfx)    |  Permet l'utilisation de nouveaux élements d'interfaces, étend les fonctionnalités de JAVAFX. <br> Exemple d'utilisation : <li> PopOver lors du passage sur l'image d'un ingrédient à Modifier/Ajouter.</li>|
 |                      |         |      |        |
