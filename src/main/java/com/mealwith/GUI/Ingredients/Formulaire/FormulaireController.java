@@ -35,10 +35,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class FormulaireController implements Initializable {
     @FXML
@@ -57,25 +54,38 @@ public class FormulaireController implements Initializable {
     public TextField inputPrice,inputTempMin,inputTempMax,inputName,inputID,inputShelflife;
     @FXML
     public Slider sliderTempMin,sliderTempMax;
+    @FXML
+    public FontIcon errorCatIcon,errorOriginIcon,errorUnitIcon,errorPriceIcon,errorShelflifeIcon,errorTempMinIcon,errorTempMaxIcon,errorNameIcon,errorImgIcon;
 
+    // Logo et font du logotype
     private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
     public Text textLogo; // Logotype
 
+    // Envoi / Réception de données par ce formulaire
     public List<Object> dataReceive = new ArrayList<>(); // Stockage des données récupérées du controlleur de provenance
     public static List<Object> dataSend = new ArrayList<>(); // Données envoyés par ce formulaire
-    public List<Ingredients> listIngredients = new ArrayList<>(); // Ensemble des ingredients de la BDD
     public Ingredients ingredientSelected; // Ingredient émis par le formulaire de provenance
     public String operation = null; // Opération demandée par le controlleur de provenance
 
+    // Liste d'objet 'Ingredients' récupéré à partir de la base de données
+    public List<Ingredients> listIngredients = new ArrayList<>();
+
+    // Classes DAO utilisées
     public OriginDAO repoOrigin = new OriginDAO();
-    public ObservableList<Origin> listOrigin = FXCollections.observableArrayList();
     public UnitDAO repoUnit = new UnitDAO();
-    public ObservableList<Unit> listUnit = FXCollections.observableArrayList();
     public CategoriesIngredientsDAO repoCatIngr = new CategoriesIngredientsDAO();
+
+    // Combobox
+    public ObservableList<Origin> listOrigin = FXCollections.observableArrayList();
+    public ObservableList<Unit> listUnit = FXCollections.observableArrayList();
     public ObservableList<CategoriesIngredients> listCatIngr = FXCollections.observableArrayList();
     public List<FontIcon> starRatings = new ArrayList<>();
-    public AlertMessage alertMessage = new AlertMessage(); // Alerte utilisée pour informer l'utilisateur des actions effectuées en BDD
 
+    // Gestion des erreurs / Informations
+    public AlertMessage alertMessage = new AlertMessage(); // Alerte utilisée pour informer l'utilisateur des actions effectuées en BDD
+    public Map<Node,FontIcon> inputErrorMap = new HashMap<>(); // Map utilisée pour suivre les erreurs pour chacun des champs lors de la vérification des données du formulaire
+    public List<Boolean> errorInput = new ArrayList<>(); // Liste de suivi des erreurs rencontrées lors de la vérification, pour chacun des champs du formulaire
+    public Boolean errorTot = true;  // Résultat de l'opération de vérification, si false, pas d'erreur rencontrées. Est initialisée à true par défault.
 
 
     @Override
@@ -126,7 +136,7 @@ public class FormulaireController implements Initializable {
                 throwables.printStackTrace();
             }
 
-
+        // Chargement du comportement de la page selon l'opération demandée par le controlleur de provenance
         try {
             // Récupération des données stockées par le controlleur de provenance
                 getData();
@@ -137,6 +147,17 @@ public class FormulaireController implements Initializable {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
+        //  Liste des contrôles avec leur icone d'erreur associée
+            inputErrorMap.put(inputName,errorNameIcon);
+            inputErrorMap.put(comboCategory,errorCatIcon);
+            inputErrorMap.put(comboOrigin,errorOriginIcon);
+            inputErrorMap.put(comboUnit,errorUnitIcon);
+            inputErrorMap.put(inputPrice,errorPriceIcon);
+            inputErrorMap.put(inputShelflife,errorShelflifeIcon);
+            inputErrorMap.put(inputTempMin,errorTempMinIcon);
+            inputErrorMap.put(inputTempMax,errorTempMaxIcon);
+            inputErrorMap.put(ImgIngredient,errorImgIcon);
     }
 
     /**
@@ -248,40 +269,44 @@ public class FormulaireController implements Initializable {
         String btnText = ((Button) actionEvent.getSource()).getId();
 
         //Action différente selon le boutton
-        if (btnText.equals("btnAccept")) {
+        if (btnText.equals("btnAccept") && operation.equals("Add")) {
+            Verify(); // Lance la vérification de l'ensemble des champs du formulaire
 
-            if (Verify()) { // Si la vérification est effective
+            if (!errorTot) { // Si la vérification n'a rencontrée aucune erreur
                 // Ajout d'un ingredient à la base de données
                 IngredientsDAO repoIngredients = new IngredientsDAO();
 
                 Ingredients ingredientInsert = new Ingredients(
-                    this.comboCategory.getSelectionModel().getSelectedItem().getId(),
-                    this.comboOrigin.getSelectionModel().getSelectedItem().getId(),
-                    this.comboUnit.getSelectionModel().getSelectedItem().getId(),
-                    this.inputName.getText(),
-                    Double.parseDouble(this.inputPrice.getText()),
-                    Integer.parseInt(this.inputTempMin.getText()),
-                    Integer.parseInt(this.inputTempMax.getText()),
-                    Integer.parseInt(this.inputShelflife.getText()),
-                    this.ImgIngredient.getImage().getUrl()
+                        this.comboCategory.getSelectionModel().getSelectedItem().getId(),
+                        this.comboOrigin.getSelectionModel().getSelectedItem().getId(),
+                        this.comboUnit.getSelectionModel().getSelectedItem().getId(),
+                        this.inputName.getText(),
+                        Double.parseDouble(this.inputPrice.getText()),
+                        Integer.parseInt(this.inputTempMin.getText()),
+                        Integer.parseInt(this.inputTempMax.getText()),
+                        Integer.parseInt(this.inputShelflife.getText()),
+                        this.ImgIngredient.getImage().getUrl()
                 );
                 repoIngredients.Insert(ingredientInsert);
 
                 // Message de confirmation
-                    alertMessage.Alert(Alert.AlertType.INFORMATION, "Ingredient : '" + this.inputName.getText() + "' added to DB.", ButtonType.CLOSE);
+                alertMessage.Alert(Alert.AlertType.INFORMATION, "Ingredient : '" + this.inputName.getText() + "' added to DB.", ButtonType.CLOSE);
 
                 // Ajout dans la liste des ingrédients
-                    ingredientInsert.setId(repoIngredients.FindByName(ingredientInsert.getName()).getId());
-                    listIngredients.add(repoIngredients.FindByName(ingredientInsert.getName()));
+                ingredientInsert.setId(repoIngredients.FindByName(ingredientInsert.getName()).getId());
+                listIngredients.add(repoIngredients.FindByName(ingredientInsert.getName()));
 
-                // Retourne également le repo des ingredients pour ne pas le fetch de nouveau
-                    dataSend.add(listIngredients);
+                // Retourne également au controlleur principal 'Ingredients' le repo des ingredients pour ne pas le fetch de nouveau depuis la DB
+                dataSend.add(listIngredients);
 
                 // Redirection vers le formulaire 'Ingredients'
-                    DataHolder.getINSTANCE().ChangeScene((Stage) btnAccept.getScene().getWindow(), "Ingredients", "Ingredients");
+                DataHolder.getINSTANCE().ChangeScene((Stage) btnAccept.getScene().getWindow(), "Ingredients", "Ingredients");
             } else {
                 alertMessage.Alert(Alert.AlertType.ERROR, "Error when trying to insert ingredient to db", ButtonType.CLOSE);
             }
+
+        }else if (btnText.equals("btnAccept") && operation.equals("Modify")) {
+            Verify();
         }
 
         if (btnText.equals("btnCancel")) {
@@ -292,7 +317,103 @@ public class FormulaireController implements Initializable {
         }
     }
 
-    private boolean Verify() {
-        return true;
+    /**
+     * Fonction vérifiant l'ensemble des champs du formulaire en correspondance avec les exigences de la BDD
+     */
+    private void Verify() {
+        // Vide la liste stockant les erreurs potentiellement recontrées lors d'une précédente vérification sur les champs avant toute nouvelle vérification
+            errorInput.clear();
+
+        // Vérification de chacun des champs
+            for (Node control : inputErrorMap.keySet()) {
+                if (control instanceof TextField) { // Si le control est un TextFiel
+                    if (((TextField) control).getText().isEmpty()){ // Vérifie si le champ est nul
+                        this.errorInput.add(true);
+                        control.setStyle("-fx-border-color: red;-fx-border-width: 0.5pt");
+                        inputErrorMap.get(control).setVisible(true);
+                    }else {
+                        switch (control.idProperty().getValue()) {
+                            case "inputName":  // Vérifie que le nom de l'ingredient est correctement renseigné
+                                if (((TextField) control).getText().matches("[\\D]{1,255}")) {
+                                    this.errorInput.add(false);
+                                    inputErrorMap.get(control).setVisible(false);
+                                    control.setStyle("");
+                                } else {
+                                    this.errorInput.add(true);
+                                    control.setStyle("-fx-border-color: red;-fx-border-width: 0.5pt");
+                                    inputErrorMap.get(control).setVisible(true);
+                                }
+                                break;
+
+                            case "inputPrice": // Vérifie que le prix est correctement renseigné, en DB décimal (6,2)
+                                if (((TextField) control).getText().matches("\\d{1,6}(\\.\\d{1,2})?")) {
+                                    this.errorInput.add(false);
+                                    inputErrorMap.get(control).setVisible(false);
+                                    control.setStyle("");
+                                } else {
+                                    this.errorInput.add(true);
+                                    control.setStyle("-fx-border-color: red;-fx-border-width: 0.5pt");
+                                    inputErrorMap.get(control).setVisible(true);
+                                }
+                                break;
+
+                            case "inputShelflife": // Vérifie que la durée de vie est correctement renseignée
+                                if (((TextField) control).getText().matches("[\\d]{1,3}")) {
+                                    this.errorInput.add(false);
+                                    inputErrorMap.get(control).setVisible(false);
+                                    control.setStyle("");
+                                } else {
+                                    this.errorInput.add(true);
+                                    control.setStyle("-fx-border-color: red;-fx-border-width: 0.5pt");
+                                    inputErrorMap.get(control).setVisible(true);
+                                }
+                                break;
+
+                            case "inputTempMin": // Vérifie que les températures min et max sont renseignées et que TempMin < TempMax
+                                if (((TextField) control).getText().matches("[\\d]{1,2}") && ((Integer.parseInt(inputTempMax.getText())) > (Integer.parseInt(((TextField) control).getText())))) {
+                                    this.errorInput.add(false);
+                                    inputErrorMap.get(control).setVisible(false);
+                                    inputErrorMap.get(inputTempMax).setVisible(false);
+                                    control.setStyle("");
+                                    inputTempMax.setStyle("");
+                                } else {
+                                    this.errorInput.add(true);
+                                    control.setStyle("-fx-border-color: red;-fx-border-width: 0.5pt");
+                                    inputTempMax.setStyle("-fx-border-color: red;-fx-border-width: 0.5pt");
+                                    inputErrorMap.get(control).setVisible(true);
+                                    inputErrorMap.get(inputTempMax).setVisible(true);
+                                }
+                                break;
+
+                            default: break;
+                        }
+                    }
+
+                } else if(control instanceof ComboBox){ // Sinon,si c'est une combobox
+                    if(((ComboBox<Object>)control).getSelectionModel().getSelectedItem() != null ){ // Vérifie si un élément à été sélectionné dans la combobox
+                        this.errorInput.add(false);
+                        inputErrorMap.get(control).setVisible(false);
+                        control.setStyle("");
+                    }else{
+                        this.errorInput.add(true);
+                        inputErrorMap.get(control).setVisible(true);
+                        control.setStyle("-fx-border-color: red;-fx-border-width: 0.5pt");
+                    }
+
+                } else if (control instanceof ImageView){ // Sinon,si c'est une image
+                    if(!((ImageView)control).getImage().getUrl().isEmpty() && (((ImageView)control).getImage().getUrl().length() < 255)){ // Vérifie si une image à été sélectionné pour l'ingredient et si l'url ne comprends pas plus de 255 caractère
+                        this.errorInput.add(false);
+                        inputErrorMap.get(control).setVisible(false);
+                    }else{
+                        this.errorInput.add(true);
+                        inputErrorMap.get(control).setVisible(true);
+                    }
+                }
+            }
+
+        // Si aucune erreur rencontré sur les champs, on attribue à la variable 'errorTot' la valeur false
+            if (!errorInput.contains(true)){
+                errorTot = false;
+            }
     }
 }

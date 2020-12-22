@@ -60,6 +60,9 @@
                                  </image>
                               </ImageView>
                            </center>
+                           <right>
+                              <FontIcon fx:id="errorImgIcon" fill="RED" iconLiteral="fa-warning" selectionEnd="0" visible="false" BorderPane.alignment="CENTER" />
+                           </right>
                         </BorderPane>
                         <HBox alignment="CENTER" spacing="20.0">
                            <children>
@@ -69,12 +72,13 @@
                                  </font>
                               </Label>
                               <TextField fx:id="inputID" disable="true" editable="false" prefHeight="25.0" prefWidth="54.0" />
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Name">
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="44.0" text="Name">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
                               <TextField fx:id="inputName" editable="false" prefHeight="25.0" prefWidth="180.0" />
+                              <FontIcon fx:id="errorNameIcon" fill="RED" iconLiteral="fa-warning" selectionEnd="0" visible="false" />
                            </children>
                         </HBox>
                         <HBox fx:id="RatingHBox" alignment="CENTER_LEFT" layoutX="10.0" layoutY="265.0" spacing="20.0" visible="false">
@@ -119,6 +123,7 @@
                                  </font>
                               </Label>
                               <ComboBox fx:id="comboCategory" disable="true" prefHeight="25.0" prefWidth="287.0" promptText="Choose a category" />
+                              <FontIcon fx:id="errorCatIcon" fill="RED" iconLiteral="fa-warning" selectionEnd="0" visible="false" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="249.0" prefWidth="411.0" spacing="10.0" GridPane.rowIndex="2">
@@ -129,6 +134,7 @@
                                  </font>
                               </Label>
                               <ComboBox fx:id="comboOrigin" disable="true" prefHeight="25.0" prefWidth="287.0" promptText="Choose an origin" />
+                              <FontIcon fx:id="errorOriginIcon" fill="RED" iconLiteral="fa-warning" selectionEnd="0" visible="false" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="249.0" prefWidth="411.0" spacing="10.0" GridPane.rowIndex="3">
@@ -139,6 +145,7 @@
                                  </font>
                               </Label>
                               <ComboBox fx:id="comboUnit" disable="true" prefHeight="25.0" prefWidth="287.0" promptText="Choose a unit" />
+                              <FontIcon fx:id="errorUnitIcon" fill="RED" iconLiteral="fa-warning" selectionEnd="0" visible="false" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="249.0" prefWidth="411.0" spacing="10.0" GridPane.rowIndex="4">
@@ -149,6 +156,7 @@
                                  </font>
                               </Label>
                               <TextField fx:id="inputPrice" editable="false" prefHeight="25.0" prefWidth="287.0" />
+                              <FontIcon fx:id="errorPriceIcon" fill="RED" iconLiteral="fa-warning" selectionEnd="0" visible="false" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="196.0" prefHeight="249.0" prefWidth="411.0" spacing="10.0" GridPane.rowIndex="5">
@@ -159,6 +167,7 @@
                                  </font>
                               </Label>
                               <TextField fx:id="inputShelflife" editable="false" prefHeight="25.0" prefWidth="287.0" />
+                              <FontIcon fx:id="errorShelflifeIcon" fill="RED" iconLiteral="fa-warning" selectionEnd="0" visible="false" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="360.0" prefHeight="249.0" prefWidth="411.0" spacing="10.0" GridPane.rowIndex="6">
@@ -178,6 +187,7 @@
                                              </font>
                                           </Label>
                                           <TextField fx:id="inputTempMin" editable="false" layoutX="93.0" layoutY="59.0" prefHeight="25.0" prefWidth="105.0" />
+                                          <FontIcon fx:id="errorTempMinIcon" fill="RED" iconLiteral="fa-warning" layoutX="212.0" layoutY="75.0" selectionEnd="0" visible="false" />
                                        </children>
                                     </Group>
                                     <Group>
@@ -189,6 +199,7 @@
                                              </font>
                                           </Label>
                                           <TextField fx:id="inputTempMax" editable="false" layoutX="90.0" layoutY="58.0" prefHeight="25.0" prefWidth="107.0" />
+                                          <FontIcon fx:id="errorTempMaxIcon" fill="RED" iconLiteral="fa-warning" layoutX="212.0" layoutY="73.0" selectionEnd="0" visible="false" />
                                        </children>
                                     </Group>
                                  </children>
