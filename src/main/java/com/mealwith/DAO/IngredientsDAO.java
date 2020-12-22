@@ -37,14 +37,38 @@ public class IngredientsDAO{
             insertOne.close();
     }
 
-    public void Update(Ingredients ingredients) {
+    /**
+     * Met à jour l'ingrédient envoyé en paramètre dans la BDD
+     * @param ingredients Ingrédient avec ses membres mis à jour
+     */
+    public void Update(Ingredients ingredients) throws SQLException {
         // Création de la requête de màj d'un user
+            PreparedStatement updateOne = DataHolder.getINSTANCE().getCon().prepareStatement(
+                    "UPDATE ingredients " +
+                            "SET category_id = ?,origin_id = ?,unit_id = ?,name = ?,price = ?,temp_min=?,temp_max=?,shelf_life=?,picture=?" +
+                            "WHERE id=?");
 
         // Définit les paramètres pour la requête préparée
+            updateOne.setInt(1,ingredients.getCategory_id());
+            updateOne.setInt(2,ingredients.getOrigin_id());
+            updateOne.setInt(3,ingredients.getUnit_id());
+            updateOne.setString(4,ingredients.getName());
+            updateOne.setDouble(5,ingredients.getPrice());
+            updateOne.setInt(6,ingredients.getTemp_min());
+            updateOne.setInt(7,ingredients.getTemp_max());
+            updateOne.setInt(8,ingredients.getShelf_life());
+            updateOne.setString(9,ingredients.getPicture());
+
+            updateOne.setInt(10,ingredients.getId()); // ID de l'ingredient à mettre à jour
 
         // Exécute la requête
+            updateOne.executeUpdate();
 
         // Ferme la requête
+            updateOne.close();
+
+        // Clos la connection
+            DataHolder.getINSTANCE().getCon().close();
     }
 
     /**

@@ -193,6 +193,9 @@ public class IngredientsController implements Initializable {
                 listIngredientsFilter.remove(deletedIngredients);
                 listIngredients.remove(deletedIngredients);
                 tab_ingredient.refresh();
+
+                alert.Alert(AlertType.INFORMATION,"Ingredient " + deletedIngredients.getName() + " deleted from DB.",ButtonType.CLOSE);
+
                 break;
 
             default:

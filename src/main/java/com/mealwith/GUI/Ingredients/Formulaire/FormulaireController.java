@@ -39,7 +39,7 @@ import java.util.*;
 
 public class FormulaireController implements Initializable {
     @FXML
-    public HBox Home,RatingHBox,RatingHBoxStar;
+    public HBox Home,RatingHBox,RatingHBoxStar,hboxBtn;
     @FXML
     public ImageView ImgLogo,ImgIngredient;
     @FXML
@@ -179,10 +179,10 @@ public class FormulaireController implements Initializable {
      * Fonction récupérant toute les informations nécessaire en cas de modification ou de visualisation d'un ingredient
      * @throws SQLException Exception possible liée à l'usage de la BDD
      */
-    public void loadPage() throws SQLException{
+    public void loadPage() throws SQLException {
 
         // S'il s'agit d'une modification ou d'un détails
-        if(operation.equals("Modify") || operation.equals("Details")){
+        if (operation.equals("Modify") || operation.equals("Details")) {
 
             // Remplissage des champs avec les informations du disque
             ingredientSelected = (Ingredients) dataReceive.get(2);
@@ -199,9 +199,26 @@ public class FormulaireController implements Initializable {
             this.comboUnit.getSelectionModel().select(repoUnit.FindByID(ingredientSelected.getUnit_id()));
             this.comboOrigin.getSelectionModel().select(repoOrigin.FindByID(ingredientSelected.getOrigin_id()));
             this.RatingHBox.setVisible(true);
-            for (FontIcon starIcon: starRatings) {
-                starIcon.setIconColor(Color.rgb(255,225,77));
+            for (FontIcon starIcon : starRatings) {
+                starIcon.setIconColor(Color.rgb(255, 225, 77));
             }
+
+            if (operation.equals("Details")) { // S'il s'agit de l'affichage du détail, cache le bouton 'btnAccept'
+                hboxBtn.getChildren().remove(btnAccept);
+            }
+        }
+
+        // Changement du texte du btnAccept ainsi que du logo selon opération demandée
+        if (operation.equals("Add")) {
+            btnAccept.setText("Add");
+            FontIcon iconAdd = new FontIcon();
+            iconAdd.setIconLiteral("fa-plus");
+            btnAccept.setGraphic(iconAdd);
+        } else if (operation.equals("Modify")) {
+            btnAccept.setText("Update");
+            FontIcon iconModify = new FontIcon();
+            iconModify.setIconLiteral("fa-pencil");
+            btnAccept.setGraphic(iconModify);
         }
     }
 
@@ -266,54 +283,70 @@ public class FormulaireController implements Initializable {
 
     public void btnClick(ActionEvent actionEvent) throws SQLException {
         // Récupère l'ID du bouton dans une string
-        String btnText = ((Button) actionEvent.getSource()).getId();
+            String btnText = ((Button) actionEvent.getSource()).getId();
 
         //Action différente selon le boutton
-        if (btnText.equals("btnAccept") && operation.equals("Add")) {
-            Verify(); // Lance la vérification de l'ensemble des champs du formulaire
+            if (btnText.equals("btnAccept")){
+                Verify(); // Lance la vérification de l'ensemble des champs du formulaire
 
-            if (!errorTot) { // Si la vérification n'a rencontrée aucune erreur
-                // Ajout d'un ingredient à la base de données
-                IngredientsDAO repoIngredients = new IngredientsDAO();
+                if (!errorTot) { // Si la vérification n'a rencontrée aucune erreur
+                    IngredientsDAO repoIngredients = new IngredientsDAO();
 
-                Ingredients ingredientInsert = new Ingredients(
-                        this.comboCategory.getSelectionModel().getSelectedItem().getId(),
-                        this.comboOrigin.getSelectionModel().getSelectedItem().getId(),
-                        this.comboUnit.getSelectionModel().getSelectedItem().getId(),
-                        this.inputName.getText(),
-                        Double.parseDouble(this.inputPrice.getText()),
-                        Integer.parseInt(this.inputTempMin.getText()),
-                        Integer.parseInt(this.inputTempMax.getText()),
-                        Integer.parseInt(this.inputShelflife.getText()),
-                        this.ImgIngredient.getImage().getUrl()
-                );
-                repoIngredients.Insert(ingredientInsert);
+                    if (operation.equals("Add")) { // Si c'est un ajout
+                        // Ajout d'un ingredient à la base de données
+                            Ingredients ingredientInsert = new Ingredients(
+                                    this.comboCategory.getSelectionModel().getSelectedItem().getId(),
+                                    this.comboOrigin.getSelectionModel().getSelectedItem().getId(),
+                                    this.comboUnit.getSelectionModel().getSelectedItem().getId(),
+                                    this.inputName.getText(),
+                                    Double.parseDouble(this.inputPrice.getText()),
+                                    Integer.parseInt(this.inputTempMin.getText()),
+                                    Integer.parseInt(this.inputTempMax.getText()),
+                                    Integer.parseInt(this.inputShelflife.getText()),
+                                    this.ImgIngredient.getImage().getUrl()
+                            );
 
-                // Message de confirmation
-                alertMessage.Alert(Alert.AlertType.INFORMATION, "Ingredient : '" + this.inputName.getText() + "' added to DB.", ButtonType.CLOSE);
+                            repoIngredients.Insert(ingredientInsert);
 
-                // Ajout dans la liste des ingrédients
-                ingredientInsert.setId(repoIngredients.FindByName(ingredientInsert.getName()).getId());
-                listIngredients.add(repoIngredients.FindByName(ingredientInsert.getName()));
+                        // Message de confirmation
+                            alertMessage.Alert(Alert.AlertType.INFORMATION, "Ingredient : '" + this.inputName.getText() + "' added to DB.", ButtonType.CLOSE);
 
-                // Retourne également au controlleur principal 'Ingredients' le repo des ingredients pour ne pas le fetch de nouveau depuis la DB
-                dataSend.add(listIngredients);
+                        // Ajout dans la liste des ingrédients
+                            ingredientInsert.setId(repoIngredients.FindByName(ingredientInsert.getName()).getId());
+                            listIngredients.add(repoIngredients.FindByName(ingredientInsert.getName()));
 
-                // Redirection vers le formulaire 'Ingredients'
-                DataHolder.getINSTANCE().ChangeScene((Stage) btnAccept.getScene().getWindow(), "Ingredients", "Ingredients");
-            } else {
-                alertMessage.Alert(Alert.AlertType.ERROR, "Error when trying to insert ingredient to db", ButtonType.CLOSE);
+                    } else if (operation.equals("Modify")){ // Si c'est une modification
+                        // Modification de l'ingredient
+                            ingredientSelected.setCategory_id(this.comboCategory.getSelectionModel().getSelectedItem().getId());
+                            ingredientSelected.setOrigin_id(this.comboOrigin.getSelectionModel().getSelectedItem().getId());
+                            ingredientSelected.setUnit_id(this.comboUnit.getSelectionModel().getSelectedItem().getId());
+                            ingredientSelected.setName(this.inputName.getText());
+                            ingredientSelected.setPrice(Double.parseDouble(this.inputPrice.getText()));
+                            ingredientSelected.setTemp_min(Integer.parseInt(this.inputTempMin.getText()));
+                            ingredientSelected.setTemp_max(Integer.parseInt(this.inputTempMax.getText()));
+                            ingredientSelected.setShelf_life(Integer.parseInt(this.inputShelflife.getText()));
+                            ingredientSelected.setPicture(this.ImgIngredient.getImage().getUrl());
+
+                            repoIngredients.Update(ingredientSelected);
+
+                        // Message de confirmation
+                            alertMessage.Alert(Alert.AlertType.INFORMATION, "Ingredient : '" + this.inputName.getText() + "' modified into DB.", ButtonType.CLOSE);
+
+                        // Remplace l'ingredient dans la liste des ingredients par le nouveau
+                            listIngredients.remove(ingredientSelected);
+                            listIngredients.add(repoIngredients.Find(ingredientSelected.getId()));
+                    }
+                } else {
+                    alertMessage.Alert(Alert.AlertType.ERROR, "Please verify all fields in order to insert or update this ingredient into the db", ButtonType.CLOSE);
+                }
             }
 
-        }else if (btnText.equals("btnAccept") && operation.equals("Modify")) {
-            Verify();
-        }
-
-        if (btnText.equals("btnCancel")) {
-            // Retourne également le repo des ingredients pour ne pas le fetch de nouveau
+        if (btnText.equals("btnCancel") || !errorTot) {
+            // Action commune, quelle que soit le bouton
+            // Retourne le repo des ingredients pour ne pas le fetch de nouveau
             dataSend.add(listIngredients);
             // Redirection vers le formulaire 'Ingredients'
-            DataHolder.getINSTANCE().ChangeScene((Stage) btnAccept.getScene().getWindow(), "Ingredients", "Ingredients");
+            DataHolder.getINSTANCE().ChangeScene((Stage) btnCancel.getScene().getWindow(), "Ingredients", "Ingredients");
         }
     }
 
