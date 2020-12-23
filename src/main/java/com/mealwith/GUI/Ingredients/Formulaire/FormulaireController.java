@@ -95,6 +95,7 @@ public class FormulaireController implements Initializable {
 
         // Vide les précédentes données récupérées et envoyées
             dataSend.clear();
+            dataReceive.clear();
 
         // Ajout gestionnaire d'écoute sur le logo pour renvoyer au menu
             Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(),Home.getId(),Home.getId()));
@@ -103,11 +104,21 @@ public class FormulaireController implements Initializable {
             sliderTempMin.valueProperty().addListener((observable, oldValue, newValue) -> inputTempMin.setText(String.valueOf(newValue.intValue())));
             sliderTempMax.valueProperty().addListener((observable, oldValue, newValue) -> inputTempMax.setText(String.valueOf(newValue.intValue())));
 
-            inputTempMin.setOnAction(event -> sliderTempMin.setValue(Double.parseDouble(inputTempMin.getText())));
-            inputTempMax.setOnAction(event -> sliderTempMax.setValue(Double.parseDouble(inputTempMax.getText())));
+            inputTempMin.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.isEmpty()) {
+                    sliderTempMin.setValue(0);
+                } else {
+                    sliderTempMin.setValue(Double.parseDouble(newValue));
+                }
+            });
 
-        // Ajout gestionnaires d'écoute sur les sliders pour la température et les inputs réciproquement
-            comboUnit.setOnInputMethodTextChanged(event -> comboUnit.cancelEdit());
+            inputTempMax.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.isEmpty()) {
+                    sliderTempMax.setValue(0);
+                } else {
+                    sliderTempMax.setValue(Double.parseDouble(newValue));
+                }
+            });
 
         // Récupération des images
             ImgLogo.setImage(new Image("img/Logo Mealwith.png"));
@@ -403,7 +414,8 @@ public class FormulaireController implements Initializable {
                                 break;
 
                             case "inputTempMin": // Vérifie que les températures min et max sont renseignées et que TempMin < TempMax
-                                if (((TextField) control).getText().matches("[\\d]{1,2}") && ((Integer.parseInt(inputTempMax.getText())) > (Integer.parseInt(((TextField) control).getText())))) {
+                                if (((TextField) control).getText().matches("[\\d]{1,2}")
+                                && ((Integer.parseInt(inputTempMax.getText())) > (Integer.parseInt(((TextField) control).getText())))) {
                                     this.errorInput.add(false);
                                     inputErrorMap.get(control).setVisible(false);
                                     inputErrorMap.get(inputTempMax).setVisible(false);
