@@ -20,11 +20,11 @@ public final class DataHolder {
 
     private DataHolder(){setCon();};
 
-    private ArrayList<Object> list = new ArrayList<>();
-
     public static DataHolder getINSTANCE(){
         return INSTANCE;
     }
+
+    private ArrayList<Object> list = new ArrayList<>();
 
     public void setList(ArrayList<Object> list){
          this.list = list;
