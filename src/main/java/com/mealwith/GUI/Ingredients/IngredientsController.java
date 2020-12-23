@@ -1,8 +1,8 @@
 package com.mealwith.GUI.Ingredients;
 
+import com.mealwith.DAO.CategoriesIngredientsDAO;
 import com.mealwith.DAO.IngredientsDAO;
 import com.mealwith.Entity.Ingredients;
-import com.mealwith.GUI.Ingredients.Formulaire.FormulaireController;
 import com.mealwith.Service.AlertMessage;
 import com.mealwith.Service.CustomsFonts;
 import com.mealwith.Service.DataHolder;
@@ -16,6 +16,8 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -36,7 +38,7 @@ public class IngredientsController implements Initializable {
     @FXML
     public ImageView ImgLogo;
     @FXML
-    public HBox Home;
+    public HBox Home,hboxPagination;
     @FXML
     public VBox catMenu;
     @FXML
@@ -50,26 +52,44 @@ public class IngredientsController implements Initializable {
     @FXML
     public Button btnDelete, btnDetails, btnModify, btnAdd;
     @FXML
-    public Label catAll, catMeat, catFruits, catDairy, catGro;
+    public Label catAll, catMeat, catFruits, catDairy, catGro,actualPageCount,lastPage,firstPage;
     @FXML
-    public FontIcon iconDelete, iconAdd, iconModify, iconDetails, iconTri, catAllIcon, catMeatIcon, catFruitsIcon, catDairyIcon, catGroIcon;
+    public FontIcon iconDelete, iconAdd, iconModify, iconDetails, iconTri, catAllIcon, catMeatIcon, catFruitsIcon, catDairyIcon, catGroIcon,previousPage,nextPage;
     @FXML
     public TextField inputSearch;
 
+    // Logo et font du logotype
     private final CustomsFonts customsFonts = new CustomsFonts(); // Service permettant de stocker les Fonts utilisés dans le projet
     public Text textLogo; // Logotype
 
-    public ObservableList<Ingredients> listIngredients = FXCollections.observableArrayList();
+    // Envoi / Réception de données par ce formulaire
     public static List<Object> dataSend = new ArrayList<>(); // Données qui seront stockées par ce controlleur et utilisé par le controlleur de destination
-    public static List<Object> dataReceive = new ArrayList<>(); // Stockage des données récupérées du controlleur de provenance
-    public Map<Label, FontIcon> catFilter = new HashMap<>(); // Map associant les noms des catérogies dans le menu de gauche avec leur icône respective
+
+    // Liste d'objet 'Ingredients' récupéré à partir de la base de données
+    public ObservableList<Ingredients> listIngredients = FXCollections.observableArrayList(); // Avec toutes les informations
+    public ObservableList<Ingredients> listIngredientsReduced = FXCollections.observableArrayList(); // Seul l'ID,le nom,l'ID de la catégorie et l'URL de l'image de l'ensemble des ingredients
+
+    // Classes DAO utilisées
     public IngredientsDAO repoIngredients = new IngredientsDAO();
-    public AlertMessage alert = new AlertMessage();
-    public FilteredList<Ingredients> listIngredientsFilter = new FilteredList<>(FXCollections.observableList(listIngredients)); // Liste des ingredients filtrée par catégorie ou texte de la search bar
+
+    // Gestions des filtres par catégories ou par le texte de la barre de recherche
+    public Map<Label, FontIcon> catFilter = new HashMap<>(); // Map associant les noms des catérogies dans le menu de gauche avec leur icône respective
+    public FilteredList<Ingredients> listIngredientsFilter = new FilteredList<>(FXCollections.observableList(listIngredientsReduced)); // Liste des ingredients filtrée par catégorie ou texte de la search bar
     public ObjectProperty<Predicate<Ingredients>> categoryNameFilter = new SimpleObjectProperty<>(); // Filtre sur la catégorie sélectionnée dans le menu de gauche
-    public ObjectProperty<Predicate<Ingredients>> searchTextFilter = new SimpleObjectProperty<>(); // Filtre sur le texte de la barre de recherche
+    public ObjectProperty<Predicate<Ingredients>> searchTextFilter = new SimpleObjectProperty<>(); // Critère pour le filtre sur le texte de la barre de recherche
     public String categoryName = ""; // Reccueil la catégorie sélectionnée
     public String searchText = "";  // Reccueil le texte saisit dans l'input de recherche
+
+    // Gestion des erreurs / Informations
+    public AlertMessage alert = new AlertMessage();
+
+    // Pagination
+    public int limitIngredient = 7 ; // Nombre d'élément par page
+    public int offset = 0 ; // Index du premier élèment à retourner, décalage des lignes à obtenir. Initialisation à 0.
+    public int pageCount ; // Nombre de pages nécessaires à l'affichage des ingredient
+    public int pageNumber = 1; // Numéro de la page en cours. Initialisation à 1.
+    public int categoryID = 0 ; // ID de la catégorie pour laquelle on souhaite effectuer la pagination, si égal à 0 alors retourne tous les ingredients
+    public int totalNumberIngredient = 0; // Nombre total d'ingredient dans la BDD ou pour une catégorie donnée.
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,7 +97,6 @@ public class IngredientsController implements Initializable {
             textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
 
         // Vide les précédentes données récupérées et envoyées
-            dataReceive.clear();
             dataSend.clear();
 
         // Récupération des images
@@ -103,18 +122,13 @@ public class IngredientsController implements Initializable {
                 searchRecipe();
             });
 
-        // Récupération des données stockées par le formulaire
-            getData();
-
         // Récupération des ingrédients dans la BDD ou via le controlleur de provenance
-            if (!dataReceive.isEmpty()) {
-                listIngredients.addAll((Collection<? extends Ingredients>) dataReceive.get(0));
-            }else{
-                try {
-                    listIngredients.addAll(repoIngredients.List());
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+            try {
+                listIngredients.addAll(repoIngredients.ListPagination(limitIngredient, offset,0 ));
+                listIngredientsReduced.addAll(repoIngredients.ListReduced());
+                pagination(); // Création automatique de la pagination
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
 
         // Lie le membre approprié de chaque ingrédients à la colonne du tableau
@@ -152,7 +166,7 @@ public class IngredientsController implements Initializable {
                     // Informe le controlleur du formulaire que l'on veut effectuer un ajout
                     dataSend.add("Details"); //Stockage de l'opération demandée
                     dataSend.add(listIngredients); //Stockage de l'ensemble des ingredients
-                    dataSend.add(tab_ingredient.getSelectionModel().getSelectedItem()); //Stockage du ingredient concerné
+                    dataSend.add(repoIngredients.Find(tab_ingredient.getSelectionModel().getSelectedItem().getId())); //Stockage de l'ingredient concerné
                     // Redirection vers le formulaire d'ajout
                     DataHolder.getINSTANCE().ChangeScene((Stage) btnAdd.getScene().getWindow(), "Ingredients/Formulaire", "Formulaire");
                 }
@@ -175,7 +189,7 @@ public class IngredientsController implements Initializable {
                     // Informe le controlleur du formulaire que l'on veut effectuer une modification
                     dataSend.add("Modify"); //Stockage de l'opération demandée
                     dataSend.add(listIngredients); //Stockage de l'ensemble des ingredients
-                    dataSend.add(tab_ingredient.getSelectionModel().getSelectedItem()); //Stockage du ingredient concerné
+                    dataSend.add(repoIngredients.Find(tab_ingredient.getSelectionModel().getSelectedItem().getId())); //Stockage de l'ingredient concerné
                     // Redirection vers le formulaire de modification
                     DataHolder.getINSTANCE().ChangeScene((Stage) btnAdd.getScene().getWindow(), "Ingredients/Formulaire", "Formulaire");
                 }
@@ -204,19 +218,13 @@ public class IngredientsController implements Initializable {
     }
 
     /**
-     * Récupère les datas stockées par le formulaire d'ingredients
-     */
-    public void getData()  {
-        dataReceive.addAll(FormulaireController.dataSend);
-    }
-
-    /**
      * Change  l'aspect visuelle de la catégorie sélectionnée en tant que filtre
      * @param event Evenement déclenchant l'action
      */
-    public void MenuClick(Event event) {
+    public void MenuClick(Event event) throws SQLException {
         Label choiceLabel = (Label) event.getSource();
         categoryName = choiceLabel.getText(); // Stocke la catégorie cliquée
+        CategoriesIngredientsDAO repoCatIng = new CategoriesIngredientsDAO();
         String labelID = choiceLabel.getId();
 
         for (Map.Entry<Label, FontIcon> element : catFilter.entrySet()) {
@@ -226,9 +234,17 @@ public class IngredientsController implements Initializable {
                     element.getKey().setStyle("-fx-font-weight: bold");
 
                     // Filtre les données du tableau
-                    if (categoryName.equals("All")) {categoryName = "";} // Réinitialisation du texte de la catégorie stockée
-                    searchRecipe(); // Filtre les recettes affichées selon leur catégorie
+                    if (categoryName.equals("All")) { // Réinitialisation du texte de la catégorie stockée si la catégorie sélectionnée est "All" et réinitilisation du CategoryID
+                        categoryName = "";
+                        categoryID = 0;
+                    }else {
+                        categoryID = repoCatIng.GetIDByName(categoryName);
+                    }
+                    // Réinitilise le numéro de page lors du changement de catégorie
+                        pageNumber = 1;
 
+                    // Actualisation de la pagination
+                        pagination();
                 } else {
                     element.getValue().setVisible(false);
                     element.getKey().setStyle("");
@@ -265,4 +281,144 @@ public class IngredientsController implements Initializable {
                 tab_ingredient.setItems(listIngredients);
             }
         }
+
+    /**
+     * Fonction permettrant de générer une pagination pour les ingredients
+     */
+    private void pagination() throws SQLException {
+        // Calcul des nombres d'ingrédients et de pages nécessaires pour les afficher
+            if (categoryID == 0){
+                totalNumberIngredient = repoIngredients.CountAll(); // Compte le nombre d'ingrédients, toutes catégories confondues
+            } else{
+                totalNumberIngredient = repoIngredients.CountByCat(categoryID); // Compte le nombre d'ingrédients, pour une catégorie donnée
+            }
+            pageCount = (totalNumberIngredient % limitIngredient) > 0 ? (totalNumberIngredient / limitIngredient) + 1: (totalNumberIngredient / limitIngredient) ;
+
+        // Affiche le texte du nombre de page total et de la page en cours
+            actualPageCount.setText("Page " + pageNumber + " of " + pageCount);
+
+        // Met à jour l'offset selon le numéro de la page en cours de consultation
+            offset = (pageNumber * limitIngredient) - limitIngredient;
+
+        // Modification de la liste des ingredients pour n'afficher que ceux de la catégorie
+            listIngredients.clear();
+            listIngredients.addAll(repoIngredients.ListPagination(limitIngredient, offset, categoryID));
+            tab_ingredient.setItems(listIngredients);
+
+        // Génération du menu de pagination en bas de page
+            hboxPagination.getChildren().clear(); // On réinitialise le menu de pagination avant de le (ré)alimenter
+            int elipsisNumbePrev = 0;
+            int elipsisNumberNext = 0;
+            System.out.println(
+                    "totalNumberIngredient : " + totalNumberIngredient
+                    + " | offset : " + offset
+                    + " | pageCount : " + pageCount
+                    + " | pageNumber : " + pageNumber
+                    + " | categoryID : " + categoryID); //TODO supprimer
+
+            for (int i = 1; i < pageCount+1; i++) {
+                Label numberPagination = new Label(String.valueOf(i));
+                numberPagination.getStyleClass().add("paginationNumber");
+
+                if(i == 1 || i == pageCount || i == (pageNumber-1) || i == (pageNumber+1) || i == pageNumber){ // Limite min et max
+                    hboxPagination.getChildren().add(numberPagination);
+
+                }else if(i < (pageNumber - 1) && elipsisNumbePrev < 1){ // Si pas encore d'éllipse, en ajouter une pour les pages précédentes
+                    numberPagination.setText("...");
+                    hboxPagination.getChildren().add(numberPagination);
+                    elipsisNumbePrev ++ ;
+
+                }else if (i > (pageNumber + 1) && elipsisNumberNext < 1){ // Si pas encore d'éllipse, en ajouter une pour les pages suivantes
+                    numberPagination.setText("...");
+                    hboxPagination.getChildren().add(numberPagination);
+                    elipsisNumberNext ++ ;
+                }
+            }
+
+        // Gestion du comportement de la navigation via les pages de la pagination automatique
+            for (Node element: hboxPagination.getChildren()) {
+
+                // Initialisation pour la première ouverture du formulaire, met en avant la première page automatiquement
+                if(((Label)element).getText().equals(String.valueOf(pageNumber))){ // Si égal à la page en cours
+                    element.getStyleClass().add("selected");
+                }
+
+                // Création gestionnaire d'écoute sur click d'un des labels ajoutés lors de la pagination
+                if(!((Label)element).getText().equals("...")){ // Si le texte du label n'est pas une elipse
+
+                    element.setCursor(Cursor.HAND); // Informe l'utilisateur qu'il peut cliquer dessus en modifiant le style du curseur
+
+                    // Ajout du style 'selected' pour ne mettre en avant le numéro de la page qui vient d'être sélectionnée
+                    element.setOnMouseClicked(event -> {
+                            for (Node label: hboxPagination.getChildren()) {
+                                label.getStyleClass().remove("selected");
+                            }
+                            element.getStyleClass().add("selected");
+
+                        // Met à jour le numéro de page
+                            pageNumber = Integer.parseInt(((Label)element).getText());
+
+                        // Met à jour la pagination automatique
+                            try {
+                                pagination();
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            }
+                    });
+                }
+            }
+
+        // Gestion du comportement de la navigation via les flèches de la pagination automatique
+            previousPage.setCursor(Cursor.HAND);
+            previousPage.setOnMouseClicked(event -> {
+                // Met à jour le numéro de page
+                pageNumber--;
+
+                // Met à jour la pagination automatique
+                try {
+                    pagination();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+
+            nextPage.setCursor(Cursor.HAND);
+            nextPage.setOnMouseClicked(event -> {
+                // Met à jour le numéro de page
+                pageNumber++;
+
+                // Met à jour la pagination automatique
+                try {
+                    pagination();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+
+            firstPage.setCursor(Cursor.HAND);
+            firstPage.setOnMouseClicked(event -> {
+                // Met à jour le numéro de page
+                pageNumber = 1;
+
+                // Met à jour la pagination automatique
+                try {
+                    pagination();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+
+            lastPage.setCursor(Cursor.HAND);
+            lastPage.setOnMouseClicked(event -> {
+                // Met à jour le numéro de page
+                pageNumber = pageCount;
+
+                // Met à jour la pagination automatique
+                try {
+                    pagination();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+    }
 }

@@ -62,8 +62,6 @@ public class FormulaireController implements Initializable {
     public Text textLogo; // Logotype
 
     // Envoi / Réception de données par ce formulaire
-    public List<Object> dataReceive = new ArrayList<>(); // Stockage des données récupérées du controlleur de provenance
-    public static List<Object> dataSend = new ArrayList<>(); // Données envoyés par ce formulaire
     public Ingredients ingredientSelected; // Ingredient émis par le formulaire de provenance
     public String operation = null; // Opération demandée par le controlleur de provenance
 
@@ -92,10 +90,6 @@ public class FormulaireController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         // Changement de la font du Logo
             textLogo.setFont(customsFonts.LogoFont(Double.parseDouble("80")));
-
-        // Vide les précédentes données récupérées et envoyées
-            dataSend.clear();
-            dataReceive.clear();
 
         // Ajout gestionnaire d'écoute sur le logo pour renvoyer au menu
             Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(),Home.getId(),Home.getId()));
@@ -176,12 +170,10 @@ public class FormulaireController implements Initializable {
      */
     public void getData()  {
         // Réinitialisation des données stockées
-            dataReceive.clear();
             ingredientSelected = null;
             operation = null;
 
         // Récupération des informations émises par le formulaire de provenance
-            dataReceive.addAll(IngredientsController.dataSend);
             operation = (String) IngredientsController.dataSend.get(0); // Opération demandée "Modify","Add" ou "Details". Donnée émise par le controlleur de provenance
             listIngredients.addAll((Collection<? extends Ingredients>) IngredientsController.dataSend.get(1));
     }
@@ -196,7 +188,7 @@ public class FormulaireController implements Initializable {
         if (operation.equals("Modify") || operation.equals("Details")) {
 
             // Remplissage des champs avec les informations du disque
-            ingredientSelected = (Ingredients) dataReceive.get(2);
+            ingredientSelected = (Ingredients) IngredientsController.dataSend.get(2);
             this.inputID.setText(String.valueOf(ingredientSelected.getId()));
             this.inputName.setText(ingredientSelected.getName());
             this.inputPrice.setText(String.valueOf(ingredientSelected.getPrice()));
@@ -354,8 +346,6 @@ public class FormulaireController implements Initializable {
 
         if (btnText.equals("btnCancel") || !errorTot) {
             // Action commune, quelle que soit le bouton
-            // Retourne le repo des ingredients pour ne pas le fetch de nouveau
-            dataSend.add(listIngredients);
             // Redirection vers le formulaire 'Ingredients'
             DataHolder.getINSTANCE().ChangeScene((Stage) btnCancel.getScene().getWindow(), "Ingredients", "Ingredients");
         }

@@ -57,7 +57,7 @@
                   <Insets right="20.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="589.0" prefWidth="980.0" spacing="50.0">
+            <HBox alignment="TOP_CENTER" prefHeight="589.0" prefWidth="920.0" spacing="50.0">
                <children>
                   <VBox alignment="TOP_CENTER" prefHeight="589.0" prefWidth="197.0" spacing="20.0">
                      <children>
@@ -127,17 +127,72 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <TableView fx:id="tab_ingredient" prefHeight="589.0" prefWidth="519.0">
-                     <columns>
-                        <TableColumn fx:id="column_ID" prefWidth="57.0" resizable="false" text="ID" />
-                        <TableColumn fx:id="column_category" prefWidth="136.0" resizable="false" text="Category" />
-                        <TableColumn fx:id="column_ingredient" prefWidth="147.0" resizable="false" text="Ingredient" />
-                        <TableColumn fx:id="column_picture" prefWidth="125.0" resizable="false" text="Picture" />
-                     </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                  </TableView>
+                  <VBox spacing="10.0">
+                     <children>
+                        <TableView fx:id="tab_ingredient" fixedCellSize="75.0" maxHeight="-Infinity" prefHeight="565.0" prefWidth="429.0">
+                           <columns>
+                              <TableColumn fx:id="column_ID" prefWidth="46.0" resizable="false" text="ID" />
+                              <TableColumn fx:id="column_category" prefWidth="110.0" resizable="false" text="Category" />
+                              <TableColumn fx:id="column_ingredient" prefWidth="130.0" resizable="false" text="Ingredient" />
+                              <TableColumn fx:id="column_picture" prefWidth="142.0" resizable="false" text="Picture" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                        <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="446.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="actualPageCount" text="actualPageCount">
+                                 <HBox.margin>
+                                    <Insets right="30.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label fx:id="firstPage" styleClass="paginationNumber" text="First" textOverrun="WORD_ELLIPSIS">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-step-backward" styleClass="paginationArrow" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="20.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <FontIcon fx:id="previousPage" iconLiteral="fas-caret-left" iconSize="18" styleClass="paginationArrow">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </FontIcon>
+                              <HBox fx:id="hboxPagination" alignment="CENTER" spacing="5.0">
+                                 <HBox.margin>
+                                    <Insets left="10.0" right="10.0" />
+                                 </HBox.margin></HBox>
+                              <FontIcon fx:id="nextPage" iconLiteral="fas-caret-right" iconSize="18" styleClass="paginationArrow">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </FontIcon>
+                              <Label fx:id="lastPage" contentDisplay="RIGHT" styleClass="paginationNumber" text="Last" textOverrun="WORD_ELLIPSIS">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fas-step-forward" styleClass="paginationArrow" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                   <VBox alignment="CENTER" prefHeight="578.0" prefWidth="142.0" spacing="80.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Button fx:id="btnDetails" defaultButton="true" mnemonicParsing="false" onAction="#btnClick" prefWidth="80.0" text="Details">

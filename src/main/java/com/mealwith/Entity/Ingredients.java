@@ -47,9 +47,24 @@ public class Ingredients {
         this.shelf_life = shelf_life;
         this.picture = picture;
         this.picture_Img = picture_Img;
-        this.picture_Img.setFitWidth(100);
-        this.picture_Img.setFitHeight(100);
+        this.picture_Img.setFitWidth(80);
+        this.picture_Img.setFitHeight(80);
         this.picture_Img.setPreserveRatio(true);
+    }
+
+    /**
+     * Constructeur utilisant un jeu de paramètre très réduit, utilisé spécifiquement pour la recherche d'ingredient par leur nom, dans la barre de recherche du controlleur "Ingredients"
+     * @param id ID de l'ingredient
+     * @param name Nom de l'ingredient
+     * @param category_id ID de la catégorie de l'ingredient
+     */
+    public Ingredients(int id, int category_id, String name,String picture) throws SQLException {
+        this.id = id;
+        this.name = name;
+        this.picture = picture;
+        this.category_id = category_id;
+        CategoriesIngredientsDAO repoCatIngr = new CategoriesIngredientsDAO();
+        this.category_name = repoCatIngr.GetNameByID(category_id);
     }
 
     public Ingredients(int category_id, int origin_id, int unit_id, String name, double price, int temp_min, int temp_max, int shelf_life, String picture){

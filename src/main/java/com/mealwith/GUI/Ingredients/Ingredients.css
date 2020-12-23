@@ -1,3 +1,33 @@
 .table-view .table-column{
     -fx-alignment: CENTER;
+    -fx-wrap-text: true;
+}
+
+/* Evite l'affichage des scrolls bars verticale et horizontale*/
+.table-view .scroll-bar * {
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}
+
+.paginationNumber{
+    -fx-text-fill: #f27507;
+    -fx-font-size: 16px;
+}
+
+.paginationArrow{
+    -fx-fill: #f27507;
+    -fx-icon-size : 16px;
+}
+
+.paginationNumber.selected{
+    -fx-font-weight: bold;
+    -fx-text-fill: #fff;
+    -fx-background-color: #f27507;
+    -fx-background-radius: 2px;
+    -fx-padding: 1px;
 }
