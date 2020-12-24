@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
@@ -40,7 +41,7 @@ public class IngredientsController implements Initializable {
     @FXML
     public HBox Home,hboxPagination;
     @FXML
-    public VBox catMenu;
+    public VBox catMenu,pageFollow;
     @FXML
     public TableColumn<String, Integer> column_ID;
     @FXML
@@ -52,7 +53,7 @@ public class IngredientsController implements Initializable {
     @FXML
     public Button btnDelete, btnDetails, btnModify, btnAdd;
     @FXML
-    public Label catAll, catMeat, catFruits, catDairy, catGro,actualPageCount,lastPage,firstPage;
+    public Label catAll, catMeat, catFruits, catDairy, catGro,lastPage,firstPage,labelPageCount,labelPageNumber;
     @FXML
     public FontIcon iconDelete, iconAdd, iconModify, iconDetails, iconTri, catAllIcon, catMeatIcon, catFruitsIcon, catDairyIcon, catGroIcon,previousPage,nextPage;
     @FXML
@@ -74,7 +75,7 @@ public class IngredientsController implements Initializable {
 
     // Gestions des filtres par catégories ou par le texte de la barre de recherche
     public Map<Label, FontIcon> catFilter = new HashMap<>(); // Map associant les noms des catérogies dans le menu de gauche avec leur icône respective
-    public FilteredList<Ingredients> listIngredientsFilter = new FilteredList<>(FXCollections.observableList(listIngredientsReduced)); // Liste des ingredients filtrée par catégorie ou texte de la search bar
+    public FilteredList<Ingredients> listIngredientsFilter = new FilteredList<>(FXCollections.observableList(listIngredients)); // Liste des ingredients filtrée par catégorie ou texte de la search bar
     public ObjectProperty<Predicate<Ingredients>> categoryNameFilter = new SimpleObjectProperty<>(); // Filtre sur la catégorie sélectionnée dans le menu de gauche
     public ObjectProperty<Predicate<Ingredients>> searchTextFilter = new SimpleObjectProperty<>(); // Critère pour le filtre sur le texte de la barre de recherche
     public String categoryName = ""; // Reccueil la catégorie sélectionnée
@@ -104,6 +105,49 @@ public class IngredientsController implements Initializable {
 
         // Gestionnaire d'écoute sur le logo pour renvoyer au menu
             Home.setOnMouseClicked(event -> DataHolder.getINSTANCE().ChangeScene((Stage) Home.getScene().getWindow(), Home.getId(), Home.getId()));
+
+        // Gestionnaire d'écoute sur le suivi des pages pour affichage du PopOver
+            pageFollow.setCursor(Cursor.HAND);
+            pageFollow.setOnMouseClicked(event -> {
+                //Création des éléments contenus dans le PopOver
+                        HBox hBoxGotoPage = new HBox();
+                        hBoxGotoPage.setSpacing(10);
+
+                            Label textGoToPage = new Label("Jump to page");
+                            Button btnGoToPage = new Button("Go");
+                            btnGoToPage.setDefaultButton(true);
+                            TextField inputGoToPage = new TextField();
+                            inputGoToPage.setPrefWidth(50);
+
+                        hBoxGotoPage.getChildren().addAll(textGoToPage,inputGoToPage,btnGoToPage);
+
+                //Création du PopOver
+                    PopOver popOverGoToPage = new PopOver();
+                    popOverGoToPage.sizeToScene();
+                    popOverGoToPage.setAnimated(true);
+                    popOverGoToPage.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+                    popOverGoToPage.setContentNode(hBoxGotoPage);
+                    popOverGoToPage.show(pageFollow);
+
+                //Gestionnaire d'écoute sur le bouton du PopOver
+                btnGoToPage.setOnMouseClicked(event1 -> {
+                    pageNumber = Integer.parseInt(inputGoToPage.getText()); // Met à jour le numéro de page
+
+                    // Correction des saisies hors range pour le nombre de page
+                        if (pageNumber > pageCount){
+                            pageNumber = pageCount;
+                        }else if (pageNumber < 1){
+                            pageNumber = 1;
+                        }
+
+                    try {
+                        pagination(); // Met à jour la pagination
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    popOverGoToPage.hide(); // Cache la PopOver
+                });
+            });
 
         // Création des filtres qui pourront être utilisé par le tableview
             // Filtre pour la catégorie
@@ -295,7 +339,10 @@ public class IngredientsController implements Initializable {
             pageCount = (totalNumberIngredient % limitIngredient) > 0 ? (totalNumberIngredient / limitIngredient) + 1: (totalNumberIngredient / limitIngredient) ;
 
         // Affiche le texte du nombre de page total et de la page en cours
-            actualPageCount.setText("Page " + pageNumber + " of " + pageCount);
+            labelPageCount.setText(String.valueOf(pageCount));
+            labelPageCount.setStyle("-fx-font-weight: bold");
+            labelPageNumber.setText(String.valueOf(pageNumber));
+            labelPageNumber.setStyle("-fx-font-weight: bold");
 
         // Met à jour l'offset selon le numéro de la page en cours de consultation
             offset = (pageNumber * limitIngredient) - limitIngredient;

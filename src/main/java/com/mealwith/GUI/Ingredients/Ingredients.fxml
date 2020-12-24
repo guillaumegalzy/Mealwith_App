@@ -127,7 +127,7 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <VBox spacing="10.0">
+                  <VBox alignment="CENTER" spacing="10.0">
                      <children>
                         <TableView fx:id="tab_ingredient" fixedCellSize="75.0" maxHeight="-Infinity" prefHeight="565.0" prefWidth="429.0">
                            <columns>
@@ -140,22 +140,35 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="446.0" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="421.0">
                            <children>
-                              <Label fx:id="actualPageCount" text="actualPageCount">
+                              <VBox fx:id="pageFollow" alignment="CENTER" fillWidth="false" prefHeight="34.0" prefWidth="85.0">
+                                 <children>
+                                    <Label text="Page" textAlignment="CENTER" />
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                       <children>
+                                          <Label fx:id="labelPageNumber" text="Label" />
+                                          <Label text="of" />
+                                          <Label fx:id="labelPageCount" text="Label" />
+                                       </children>
+                                    </HBox>
+                                 </children>
                                  <HBox.margin>
-                                    <Insets right="30.0" />
+                                    <Insets right="20.0" />
                                  </HBox.margin>
-                              </Label>
-                              <Label fx:id="firstPage" styleClass="paginationNumber" text="First" textOverrun="WORD_ELLIPSIS">
+                              </VBox>
+                              <Label fx:id="firstPage" styleClass="paginationNumber" textOverrun="WORD_ELLIPSIS">
                                  <graphic>
-                                    <FontIcon iconLiteral="fas-step-backward" styleClass="paginationArrow" />
+                                    <FontIcon iconLiteral="fas-step-backward" iconSize="18" styleClass="paginationArrow">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></FontIcon>
                                  </graphic>
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                                  <HBox.margin>
-                                    <Insets right="20.0" />
+                                    <Insets left="20.0" right="5.0" />
                                  </HBox.margin>
                               </Label>
                               <FontIcon fx:id="previousPage" iconLiteral="fas-caret-left" iconSize="18" styleClass="paginationArrow">
@@ -166,7 +179,7 @@
                                     <Insets />
                                  </HBox.margin>
                               </FontIcon>
-                              <HBox fx:id="hboxPagination" alignment="CENTER" spacing="5.0">
+                              <HBox fx:id="hboxPagination" alignment="CENTER" spacing="10.0">
                                  <HBox.margin>
                                     <Insets left="10.0" right="10.0" />
                                  </HBox.margin></HBox>
@@ -178,15 +191,18 @@
                                     <Insets />
                                  </HBox.margin>
                               </FontIcon>
-                              <Label fx:id="lastPage" contentDisplay="RIGHT" styleClass="paginationNumber" text="Last" textOverrun="WORD_ELLIPSIS">
+                              <Label fx:id="lastPage" contentDisplay="RIGHT" styleClass="paginationNumber" textOverrun="WORD_ELLIPSIS">
                                  <graphic>
-                                    <FontIcon iconLiteral="fas-step-forward" styleClass="paginationArrow" />
+                                    <FontIcon iconLiteral="fas-step-forward" styleClass="paginationArrow">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></FontIcon>
                                  </graphic>
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                                  <HBox.margin>
-                                    <Insets left="20.0" />
+                                    <Insets left="5.0" right="20.0" />
                                  </HBox.margin>
                               </Label>
                            </children>
@@ -195,7 +211,7 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="578.0" prefWidth="142.0" spacing="80.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button fx:id="btnDetails" defaultButton="true" mnemonicParsing="false" onAction="#btnClick" prefWidth="80.0" text="Details">
+                        <Button fx:id="btnDetails" mnemonicParsing="false" onAction="#btnClick" prefWidth="80.0" text="Details">
                            <effect>
                               <DropShadow />
                            </effect>

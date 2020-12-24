@@ -1,5 +1,6 @@
 .table-view .table-column{
     -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
     -fx-wrap-text: true;
 }
 
@@ -16,12 +17,12 @@
 
 .paginationNumber{
     -fx-text-fill: #f27507;
-    -fx-font-size: 16px;
+    -fx-font-size: 18px;
 }
 
 .paginationArrow{
     -fx-fill: #f27507;
-    -fx-icon-size : 16px;
+    -fx-icon-size : 18px;
 }
 
 .paginationNumber.selected{

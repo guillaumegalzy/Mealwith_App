@@ -176,7 +176,7 @@ public class IngredientsDAO{
     }
 
     /**
-     * Récupère l'ensemble des informations pour tous les ingredients de la BDD, trié par id croissant
+     * Récupère l'ensemble des informations pour tous les ingredients de la BDD, trié par nom croissant
      * @return une liste d'ingredient
      * @throws SQLException erreur lors de la requête SQL
      */
@@ -185,7 +185,7 @@ public class IngredientsDAO{
             Statement listAll = DataHolder.getINSTANCE().getCon().createStatement();
 
         // Exécute la requête et récupération du résultat
-            ResultSet result = listAll.executeQuery("SELECT * from ingredients ORDER BY id");
+            ResultSet result = listAll.executeQuery("SELECT * from ingredients ORDER BY name");
 
         while(result.next()){
             // Ajoute l'ingrédient dans le repo
@@ -218,7 +218,7 @@ public class IngredientsDAO{
     }
 
     /**
-     * Récupère seulement l'ID,le nom,l'ID de la catégorie et l'URL de l'image de l'ensemble des ingredients de la BDD, trié par id croissant
+     * Récupère seulement l'ID,le nom,l'ID de la catégorie et l'URL de l'image de l'ensemble des ingredients de la BDD, trié par nom croissant
      * @return une liste d'ingredient
      * @throws SQLException erreur lors de la requête SQL
      */
@@ -229,7 +229,7 @@ public class IngredientsDAO{
         Statement listAll = DataHolder.getINSTANCE().getCon().createStatement();
 
         // Exécute la requête et récupération du résultat
-        ResultSet result = listAll.executeQuery("SELECT * from ingredients ORDER BY id");
+        ResultSet result = listAll.executeQuery("SELECT * from ingredients ORDER BY name");
 
         while(result.next()){
             // Ajoute l'ingrédient dans une liste
@@ -255,7 +255,7 @@ public class IngredientsDAO{
     }
 
     /**
-     * Récupère une partie des ingredients de la BDD, trié par id croissant. Cette méthode est utilisée pour la mise en place de la pagination, permettant de réduire les temps de chargement
+     * Récupère une partie des ingredients de la BDD, trié par nom croissant. Cette méthode est utilisée pour la mise en place de la pagination, permettant de réduire les temps de chargement
      * @return une liste d'ingredients
      * @param limit Nombre d'élément à retourner
      * @param offset Index du premier élèment à retourner, décalage des lignes à obtenir.
@@ -267,7 +267,7 @@ public class IngredientsDAO{
 
         if (ingredientCategoryID != 0) { // Vérifie si une catégorie a été définie ou non, la catégorie 0 n'existant pas en bdd, elle est utilisé comme condition
             // Création de la requête de recherche de l'ensemble des ingrédients
-            listAll = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from ingredients WHERE category_id = ? ORDER BY id LIMIT ? OFFSET ?");
+            listAll = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from ingredients WHERE category_id = ? ORDER BY name LIMIT ? OFFSET ?");
 
             // Définit les critères de recherche pour la requête préparée
             listAll.setInt(1, ingredientCategoryID);
@@ -275,7 +275,7 @@ public class IngredientsDAO{
             listAll.setInt(3, offset);
         } else {
             // Création de la requête de recherche de l'ensemble des ingrédients
-             listAll = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from ingredients ORDER BY id LIMIT ? OFFSET ?");
+             listAll = DataHolder.getINSTANCE().getCon().prepareStatement("SELECT * from ingredients ORDER BY name LIMIT ? OFFSET ?");
 
             // Définit les critères de recherche pour la requête préparée
             listAll.setInt(1, limit);
