@@ -75,7 +75,7 @@ public class IngredientsController implements Initializable {
 
     // Gestions des filtres par catégories ou par le texte de la barre de recherche
     public Map<Label, FontIcon> catFilter = new HashMap<>(); // Map associant les noms des catérogies dans le menu de gauche avec leur icône respective
-    public FilteredList<Ingredients> listIngredientsFilter = new FilteredList<>(FXCollections.observableList(listIngredients)); // Liste des ingredients filtrée par catégorie ou texte de la search bar
+    public FilteredList<Ingredients> listIngredientsFilter = new FilteredList<>(FXCollections.observableList(listIngredientsReduced)); // Liste des ingredients filtrée par catégorie ou texte de la search bar
     public ObjectProperty<Predicate<Ingredients>> categoryNameFilter = new SimpleObjectProperty<>(); // Filtre sur la catégorie sélectionnée dans le menu de gauche
     public ObjectProperty<Predicate<Ingredients>> searchTextFilter = new SimpleObjectProperty<>(); // Critère pour le filtre sur le texte de la barre de recherche
     public String categoryName = ""; // Reccueil la catégorie sélectionnée
