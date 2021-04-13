@@ -21,7 +21,8 @@ dependencies {
     implementation 'org.kordamp.ikonli:ikonli-javafx:11.5.0' // Font Awesome Icon
     implementation 'org.kordamp.ikonli:ikonli-fontawesome-pack:11.5.0' // Font Awesome Icon (Legacy)
     implementation 'org.kordamp.ikonli:ikonli-fontawesome5-pack:11.5.0' // Font Awesome Icon (Latest)
-
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0' // Retrofit2, consommation d'API
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0' // Conversion des réponses de l'API en POJO
 }
 
 

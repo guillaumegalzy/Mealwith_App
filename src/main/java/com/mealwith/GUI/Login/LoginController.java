@@ -47,6 +47,42 @@ public class LoginController implements Initializable {
     }
 
     public void btnLogIn_Click(ActionEvent actionEvent)  {
+
+// PERMETTRAIT LA VERIFICATION DE LEXISTENCE DUN UTILISATEUR VIA REQUETE API SYMFONY
+//        String userLoginMail = inputEmail.getText();
+//        String plainPassword = inputPassword.getText();
+//
+//        // Get the instance of CheckCredentialsService
+//        CheckCredentialsService APIService = CheckCredentialsUtils.getAPIService();
+//
+//        Call<CheckCredentialsApiResponse> callAPIService = APIService.checkCredentials(userLoginMail, plainPassword);
+//
+//        callAPIService.enqueue(new Callback<>() {
+//            @Override
+//            public void onResponse(Call<CheckCredentialsApiResponse> call, Response<CheckCredentialsApiResponse> response) {
+//                if(response.isSuccessful()) {
+//                    System.out.println("OK");
+//                } else {
+//                    System.out.println("KO");
+//                    System.out.println("code : " + response.code());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<CheckCredentialsApiResponse> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        });
+//
+//        try {
+//            Response<CheckCredentialsApiResponse> response = callAPIService.execute();
+//            CheckCredentialsApiResponse credentialsApiResponse = response.body();
+//            System.out.println(credentialsApiResponse.toString());
+//            System.out.println(callAPIService.request());
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+
         // Initialisation du repo Users
             repoUsers = new UsersDAO();
 
